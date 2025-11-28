@@ -1,0 +1,20 @@
+import "./Navbar.css";
+
+const Navbar = () => {
+  return (
+    <nav className="nav-container">
+      <div className="nav-logo">
+        Flood Map CDOC
+      </div>
+
+      <ul className="nav-links">
+        <li>Home</li>
+        <li>Flood Map</li>
+        <li>Preparedness</li>
+        <li>About</li>
+      </ul>
+    </nav>
+  );
+};
+
+export default Navbar;
