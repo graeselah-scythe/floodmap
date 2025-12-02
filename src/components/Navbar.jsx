@@ -3,9 +3,6 @@ import "./Navbar.css";
 const Navbar = () => {
   return (
     <nav className="nav-container">
-      <div className="nav-logo">
-        Flood Map CDOC
-      </div>
 
       <ul className="nav-links">
         <li>Home</li>

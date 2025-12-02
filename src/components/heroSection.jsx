@@ -1,6 +1,7 @@
 import React from "react";
 import "./HeroSection.css";
 import cdoMap from "../assets/cdoMap.png";     // change path to your asset
+import { Icon } from '@iconify/react';
 
 const HeroSection = () => {
   return (
@@ -11,10 +12,15 @@ const HeroSection = () => {
 
         <p className="hero-sub">
           An AI-powered flood risk assessment for your Barangay.
-          Stay informed, stay prepared, stay safe.
+          <br />
+          Stay informed. Stay prepared. Stay safe.
         </p>
 
-        <button className="hero-btn">View Flood Map</button>
+    <button className="hero-btn">
+  <Icon icon="mdi:map-outline" className="hero-btn-icon" />
+  View Flood Map
+</button>
+
       </div>
 
       <div className="hero-right">

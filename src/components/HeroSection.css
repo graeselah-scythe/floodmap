@@ -1,7 +1,7 @@
 .hero-wrapper{
   width:100%;
   min-height:550px;
-  background: linear-gradient(180deg, #d7ead6, #c6d9d2);
+  background: linear-gradient(180deg,#CEDAD2,#57876E);
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -9,19 +9,25 @@
 }
 
 .hero-left{
-  max-width:480px;
+  max-width:650px;
 }
 
-.hero-left h1{
-  font-size:48px;
-  font-weight:700;
-  line-height:1.2;
-  margin-bottom:25px;
+.hero-left h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+  color:#FFFFFF;
+  text-shadow: 2px 6px 4px  #858148;
 }
+
+
 
 .hero-sub{
-  font-size:18px;
+  font-size:20px;
+  font-family: 'Montserrat', sans-serif;
+  color:#FFFFFF;
   opacity:0.85;
+  margin-top: 20px;
   margin-bottom:40px;
   line-height:1.6;
 }
@@ -30,20 +36,78 @@
   padding:14px 24px;
   border:none;
   cursor:pointer;
+  font-family: 'Montserrat', sans-serif;
   font-size:17px;
+  color: #1D3045;
   border-radius:8px;
-  background:#ffffff;
+  background: #D2E0D9;
   box-shadow:0px 2px 10px rgba(0,0,0,0.08);
   transition:0.2s;
 }
 
+.hero-btn-icon {
+  font-size: 26px;
+  color: #1D3045;
+  transition: 0.25s ease;
+}
+
+/* Icon hover color */
+.hero-btn:hover .hero-btn-icon {
+  color: #32563C;
+}
+
+.hero-btn{
+  padding:14px 24px;
+  border:none;
+  cursor:pointer;
+  font-family: 'Montserrat', sans-serif bold;
+  font-size:17px;
+  font-weight: 600;   
+  color: #1D3045;
+  border-radius:8px;
+  background: #D2E0D9;
+  box-shadow:0px 2px 10px rgba(0,0,0,0.08);
+  transition:0.25s ease;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* HOVER STATE */
 .hero-btn:hover{
   transform:translateY(-3px);
+  background:#E1C158;        /* new hover bg */
+  color:#2B4733;             /* new hover text color */
+}
+
+/* If button contains an icon, change icon color too */
+.hero-btn:hover .hero-btn-icon {
+  color:#32563C;
 }
 
 /* right image */
 .hero-right img{
   width:420px;
+}
+
+/* responsive */
+@media(max-width:900px){
+  .hero-wrapper{
+    flex-direction:column;
+    padding:50px 20px;
+    text-align:center;
+  }
+  .hero-left{
+    margin-bottom:40px;
+  }
+  .hero-right img{
+    width:300px;
+  }
+}
+
+/* right image */
+.hero-right img{
+  width:950px;
 }
 
 /* responsive */
