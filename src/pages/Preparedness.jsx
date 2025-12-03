@@ -5,7 +5,6 @@ import PreparednessTab from '../components/home/PreparednessTab';
 const Preparedness = () => {
   return (
     <div>
-      <Navbar />
       <PreparednessTab />
     </div>
   );
