@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo } from "react";
-import { Tooltip, MapContainer, TileLayer, Marker } from "react-leaflet";
+import { Tooltip, MapContainer, TileLayer, Marker, ZoomControl } from "react-leaflet"; // Added ZoomControl
 import "./FloodMap.css";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -28,8 +28,8 @@ const CDO_BOUNDS = [
   [8.18, 124.35], 
   [8.65, 124.95]  
 ];
-const INITIAL_CENTER = [8.495, 124.645];
-const INITIAL_ZOOM = 11;
+const INITIAL_CENTER = [8.400, 124.645];
+const INITIAL_ZOOM = 11.7;
 
 const FloodMap = () => {
   const mapRef = useRef(null);
@@ -134,7 +134,7 @@ const FloodMap = () => {
 
   return (
     <div className="floodmap-grid-container">
-
+      
       <aside className="floodmap-sidebar">
         <div className="sidebar-content">
           <h2>Barangay List</h2>
@@ -209,11 +209,20 @@ const FloodMap = () => {
             scrollWheelZoom={true}
             className="leaflet-map"
             ref={setMapInstance} 
+            
+            // 1. DISABLE DEFAULT ZOOM CONTROLS
+            zoomControl={false} 
           >
             <TileLayer 
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; OpenStreetMap contributors'
             />
+            
+            {/* 2. RENDER ZOOM CONTROLS ONLY WHEN MAP IS ACTIVE */}
+            {appState === 'map' && (
+               <ZoomControl position="topleft" />
+            )}
+
             {filteredBarangays.map((f, index) => {
               const isSelected = selectedBarangay && selectedBarangay.barangay === f.properties.barangay;
               
@@ -226,9 +235,7 @@ const FloodMap = () => {
                   eventHandlers={{ click: () => flyToBarangay(f) }}
                 >
                   <Tooltip 
-                    // === CRITICAL FIX: KEY FORCES RE-RENDER ===
                     key={isSelected ? "selected" : "hover"} 
-                    
                     direction={isSelected ? "bottom" : "top"} 
                     offset={isSelected ? [0, 5] : [0, -28]} 
                     opacity={1} 

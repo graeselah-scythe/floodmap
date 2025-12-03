@@ -73,14 +73,16 @@
   right: 0;
   bottom: 0;
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 60px);
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 900; 
+  
+  /* UPDATED Z-INDEX TO BE HIGHER THAN MAP CONTROLS */
+  z-index: 2000; 
 }
 
 .upload-box, .loading-box {
