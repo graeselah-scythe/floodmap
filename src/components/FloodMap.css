@@ -1,39 +1,253 @@
-.floodmap-wrapper {
+/* CSS Grid Layout - The Key Solution */
+.floodmap-grid-container {
+  display: grid;
+  grid-template-areas:
+    "navbar navbar"
+    "sidebar main";
+  grid-template-columns: 320px 1fr;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* Navbar Area */
+.floodmap-navbar {
+  grid-area: navbar;
+  background: #2c3e50;
+  color: white;
+  padding: 0 20px;
   display: flex;
-  width: 100%;
-  height: 90vh;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  border-bottom: 3px solid #3498db;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
-.barangay-list {
-  width: 30%;
+.floodmap-navbar h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.navbar-subtitle {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* Sidebar Area */
+.floodmap-sidebar {
+  grid-area: sidebar;
+  background: #FFF7E5;
+  border-right: 2px solid #F3D79C;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sidebar-content {
   padding: 20px;
-  border-right: 2px solid #ddd;
-  overflow-y: auto;
-  background: #F9F7F1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 
-.barangay-list h2 {
-  font-family: "Montserrat", sans-serif;
+.sidebar-content h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+/* Search Input */
+.search-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+/* Filter Buttons */
+.risk-filter-buttons {
   margin-bottom: 20px;
-  color: #1D3045;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
 }
 
-.barangay-card {
-  padding: 15px;
-  border-radius: 10px;
-  background: white;
-  margin-bottom: 12px;
+.risk-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
   cursor: pointer;
-  transition: 0.2s;
-  border-left: 5px solid #E1C158;
+  background: #EDEDED;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+  flex: 1;
+  min-width: 60px;
+}
+
+.risk-btn.active {
+  background: #F3D79C;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.risk-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* INFO PANEL */
+.info-panel {
+  background: #FFFFFF;
+  border: 1px solid #F3D79C;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.info-panel h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+/* Barangay List Container */
+.barangay-list {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0; /* Crucial for flexbox scrolling */
+  padding-right: 5px;
+}
+
+/* Custom scrollbar for barangay list */
+.barangay-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.barangay-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.barangay-list::-webkit-scrollbar-thumb {
+  background: #F3D79C;
+  border-radius: 10px;
+}
+
+.barangay-list::-webkit-scrollbar-thumb:hover {
+  background: #E9D398;
+}
+
+/* Barangay Cards */
+.barangay-card {
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  background: #FFFFFF;
+  cursor: pointer;
+  border: 1px solid #E9D398;
+  transition: all 0.2s;
+  box-sizing: border-box;
 }
 
 .barangay-card:hover {
-  background: #FFF3D2;
-  transform: translateX(5px);
+  background: #FFF1C4;
+  transform: translateX(3px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.barangay-card.hovered {
+  background: #FFF1C4;
+  border-color: #3498db;
+}
+
+.barangay-card strong {
+  color: #2c3e50;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Main Map Area */
+.floodmap-main {
+  grid-area: main;
+  background: #f8f9fa;
+  overflow: hidden;
+  position: relative;
 }
 
 .map-container {
-  width: 70%;
+  width: 100%;
   height: 100%;
+  position: relative;
+}
+
+/* Leaflet Map Styling */
+.leaflet-map {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+}
+
+/* Fix Leaflet container */
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  font-family: inherit !important;
+}
+
+/* Placeholder text */
+.placeholder-text {
+  opacity: 0.6;
+  font-style: italic;
+  margin: 0;
+  color: #666;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .floodmap-grid-container {
+    grid-template-columns: 280px 1fr;
+  }
+  
+  .sidebar-content {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .floodmap-grid-container {
+    grid-template-areas:
+      "navbar"
+      "main"
+      "sidebar";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr 300px;
+  }
+  
+  .floodmap-sidebar {
+    border-right: none;
+    border-top: 2px solid #F3D79C;
+  }
 }

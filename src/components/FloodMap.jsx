@@ -1,12 +1,6 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
+import { Tooltip, MapContainer, TileLayer, Marker } from "react-leaflet";
 import "./FloodMap.css";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  CircleMarker
-} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -36,20 +30,38 @@ const FloodMap = () => {
   const [search, setSearch] = useState("");
   const [riskFilter, setRiskFilter] = useState("All");
   const [hovered, setHovered] = useState(null);
+  const [selectedBarangay, setSelectedBarangay] = useState(null);
 
-  // Color function for risk levels
+  // Fix for map resize/overlap issues
+  useEffect(() => {
+    const handleResize = () => {
+      if (mapRef.current) {
+        mapRef.current.invalidateSize();
+      }
+    };
+
+    // Invalidate size after component mounts
+    setTimeout(() => {
+      handleResize();
+    }, 100);
+
+    // Add resize listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // Color function for right panel
   const getRiskColor = (risk) => {
     switch (risk) {
-      case "Very High":
-        return "#8B0000";
-      case "High":
-        return "#D9534F";
-      case "Medium":
-        return "#F0AD4E";
-      case "Low":
-        return "#5CB85C";
-      default:
-        return "#999999";
+      case "Very High": return "#E53935";
+      case "High": return "#FB8C00";
+      case "Medium": return "#FDD835";
+      case "Low": return "#43A047";
+      default: return "#757575";
     }
   };
 
@@ -67,7 +79,7 @@ const FloodMap = () => {
     });
   }, [search, riskFilter]);
 
-  // flyTo when clicking a barangay card
+  // flyTo when clicking a barangay
   const flyToBarangay = (barangay) => {
     const map = mapRef.current;
     if (!map) return;
@@ -75,119 +87,145 @@ const FloodMap = () => {
     const coords = barangay.geometry.coordinates;
     map.flyTo([coords[1], coords[0]], 15, { duration: 1.2 });
 
-    L.popup()
-      .setLatLng([coords[1], coords[0]])
-      .setContent(`
-        <strong>${barangay.properties.barangay}</strong><br/>
-        Risk: ${barangay.properties.risk}
-      `)
-      .openOn(map);
+    setSelectedBarangay(barangay.properties);
+  };
+
+  // Handle map creation with invalidation
+  const handleMapCreated = (mapInstance) => {
+    mapRef.current = mapInstance;
+    
+    // Invalidate size after a short delay to ensure DOM is ready
+    setTimeout(() => {
+      if (mapInstance) {
+        mapInstance.invalidateSize();
+      }
+    }, 0);
   };
 
   return (
-    <div style={{ display: "flex", height: "600px", width: "100%" }}>
+    <div className="floodmap-grid-container">
+      {/* NAVBAR - Assuming you have one, adjust if needed */}
+      <header className="floodmap-navbar">
+        <h1>Flood Risk Map</h1>
+        <div className="navbar-subtitle">Cagayan de Oro City</div>
+      </header>
 
-      {/* ---------- SIDEBAR ---------- */}
-      <div
-        style={{
-          width: "320px",
-          background: "#FFF7E5",
-          borderRight: "2px solid #F3D79C",
-          padding: "20px",
-          overflowY: "auto"
-        }}
-      >
-        <h2 style={{ marginBottom: "10px" }}>Barangay List</h2>
+      {/* LEFT SIDEBAR */}
+      <aside className="floodmap-sidebar">
+        <div className="sidebar-content">
+          <h2>Barangay List</h2>
 
-        {/* Search Bar */}
-        <input
-          type="text"
-          placeholder="Search barangay..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            borderRadius: "8px",
-            border: "1px solid #ccc",
-            marginBottom: "15px"
-          }}
-        />
+          <input
+            type="text"
+            placeholder="Search barangay..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="search-input"
+          />
 
-        {/* Risk Filters */}
-        <div style={{ marginBottom: "20px" }}>
-          {["All", "Low", "Medium", "High", "Very High"].map((risk) => (
-            <button
-              key={risk}
-              onClick={() => setRiskFilter(risk)}
-              style={{
-                padding: "8px 12px",
-                marginRight: "6px",
-                marginBottom: "6px",
-                borderRadius: "8px",
-                border: "none",
-                cursor: "pointer",
-                background:
-                  riskFilter === risk ? "#F3D79C" : "#EDEDED"
-              }}
-            >
-              {risk}
-            </button>
-          ))}
-        </div>
-
-        {/* Barangay Cards */}
-        {filteredBarangays.map((f, index) => (
-          <div
-            key={index}
-            onMouseEnter={() => setHovered(f.properties.barangay)}
-            onMouseLeave={() => setHovered(null)}
-            onClick={() => flyToBarangay(f)}
-            style={{
-              padding: "12px",
-              borderRadius: "10px",
-              marginBottom: "10px",
-              background: hovered === f.properties.barangay ? "#FFF1C4" : "#FFFFFF",
-              cursor: "pointer",
-              border: "1px solid #E9D398"
-            }}
-          >
-            <strong>{f.properties.barangay}</strong><br />
-            Risk Level: <span style={{ color: getRiskColor(f.properties.risk) }}>
-              {f.properties.risk}
-            </span>
+          <div className="risk-filter-buttons">
+            {["All", "Low", "Medium", "High", "Very High"].map((risk) => (
+              <button
+                key={risk}
+                onClick={() => setRiskFilter(risk)}
+                className={`risk-btn ${riskFilter === risk ? "active" : ""}`}
+              >
+                {risk}
+              </button>
+            ))}
           </div>
-        ))}
-      </div>
 
-      {/* ---------- MAP AREA ---------- */}
-      <MapContainer
-        center={[8.477, 124.645]}
-        zoom={11}
-        scrollWheelZoom={true}
-        style={{ height: "100%", width: "100%" }}
-        whenCreated={(mapInstance) => (mapRef.current = mapInstance)}
-      >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          {/* INFO PANEL */}
+          <div className="info-panel">
+            {selectedBarangay ? (
+              <>
+                <h3>Barangay Details</h3>
+                <p>
+                  <strong>{selectedBarangay.barangay}</strong>
+                </p>
+                <p>
+                  <strong>Flood Risk: </strong>
+                  <span style={{ color: getRiskColor(selectedBarangay.risk) }}>
+                    {selectedBarangay.risk}
+                  </span>
+                </p>
+              </>
+            ) : (
+              <p className="placeholder-text">Click a barangay to view details</p>
+            )}
+          </div>
 
-        {/* Markers */}
-        {filteredBarangays.map((f, index) => {
-          const coords = f.geometry.coordinates;
-          return (
-            <Marker
-  key={index}
-  position={[coords[1], coords[0]]}
-  icon={riskIcons[f.properties.risk] || riskIcons["Low"]} // default
->
-  <Popup>
-    <strong>{f.properties.barangay}</strong> <br />
-    Risk: {f.properties.risk}
-  </Popup>
-</Marker>
+          {/* Barangay Cards */}
+          <div className="barangay-list">
+            {filteredBarangays.map((f, index) => (
+              <div
+                key={index}
+                className={`barangay-card ${hovered === f.properties.barangay ? "hovered" : ""}`}
+                onMouseEnter={() => setHovered(f.properties.barangay)}
+                onMouseLeave={() => setHovered(null)}
+                onClick={() => {
+                  flyToBarangay(f);
+                  // Force map resize after interaction
+                  setTimeout(() => {
+                    if (mapRef.current) {
+                      mapRef.current.invalidateSize();
+                    }
+                  }, 10);
+                }}
+              >
+                <strong>{f.properties.barangay}</strong><br />
+                <span style={{ color: getRiskColor(f.properties.risk) }}>
+                  {f.properties.risk}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </aside>
 
-          );
-        })}
-      </MapContainer>
+      {/* MAIN MAP AREA */}
+      <main className="floodmap-main">
+        <div className="map-container">
+          <MapContainer
+            center={[8.477, 124.645]}
+            zoom={11}
+            scrollWheelZoom={true}
+            className="leaflet-map"
+            whenCreated={handleMapCreated}
+          >
+            <TileLayer 
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+
+            {filteredBarangays.map((f, index) => {
+              const coords = f.geometry.coordinates;
+              return (
+                <Marker
+                  key={index}
+                  position={[coords[1], coords[0]]}
+                  icon={riskIcons[f.properties.risk] || riskIcons["Low"]}
+                  eventHandlers={{
+                    click: () => {
+                      setSelectedBarangay(f.properties);
+                      // Force map resize after marker click
+                      setTimeout(() => {
+                        if (mapRef.current) {
+                          mapRef.current.invalidateSize();
+                        }
+                      }, 10);
+                    },
+                  }}
+                >
+                  <Tooltip direction="top" offset={[0, -10]} opacity={1} sticky>
+                    <strong>{f.properties.barangay}</strong>
+                  </Tooltip>
+                </Marker>
+              );
+            })}
+          </MapContainer>
+        </div>
+      </main>
     </div>
   );
 };
