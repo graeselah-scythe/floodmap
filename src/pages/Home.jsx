@@ -1,13 +1,11 @@
-import React from 'react'; // Add this missing import
-import Navbar from '../components/Navbar';
-import HeroSection from '../components/heroSection';
-import FloodInfo from '../components/FloodInfo';
-import AboutFrame from '../components/AboutFrame';
+import React from 'react';
+import HeroSection from '../components/home/heroSection';
+import FloodInfo from '../components/home/FloodInfo';
+import AboutFrame from '../components/home/AboutFrame';
 
 const Home = () => {
   return (
     <div>
-      <Navbar />
       <HeroSection />
       <FloodInfo />
       <AboutFrame />
