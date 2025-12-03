@@ -17,7 +17,7 @@
   font-weight: 700;
   font-size: 48px;
   color:#FFFFFF;
-  text-shadow: 2px 6px 4px  #858148;
+  text-shadow: 4px 4px 4px #1D4126;
 }
 
 
@@ -25,11 +25,13 @@
 .hero-sub{
   font-size:20px;
   font-family: 'Montserrat', sans-serif;
-  color:#FFFFFF;
+  color:#ffffff;
+  font-weight: 600;
   opacity:0.85;
   margin-top: 20px;
   margin-bottom:40px;
   line-height:1.6;
+  text-shadow: 2px 4px 4px #1D4126;
 }
 
 .hero-btn{
@@ -38,16 +40,16 @@
   cursor:pointer;
   font-family: 'Montserrat', sans-serif;
   font-size:17px;
-  color: #1D3045;
+  color: #2A6044;
   border-radius:8px;
   background: #D2E0D9;
-  box-shadow:0px 2px 10px rgba(0,0,0,0.08);
+  box-shadow:0px 2px 10px #1D4126;
   transition:0.2s;
 }
 
 .hero-btn-icon {
   font-size: 26px;
-  color: #1D3045;
+  color: #ffffff;
   transition: 0.25s ease;
 }
 
@@ -63,10 +65,10 @@
   font-family: 'Montserrat', sans-serif bold;
   font-size:17px;
   font-weight: 600;   
-  color: #1D3045;
+  color: #ffffff;
   border-radius:8px;
-  background: #D2E0D9;
-  box-shadow:0px 2px 10px rgba(0,0,0,0.08);
+  background: #2A6044;
+  box-shadow:4px 5px 5px #1D4126;
   transition:0.25s ease;
   display:flex;
   align-items:center;
@@ -76,13 +78,14 @@
 /* HOVER STATE */
 .hero-btn:hover{
   transform:translateY(-3px);
-  background:#E1C158;        /* new hover bg */
-  color:#2B4733;             /* new hover text color */
+  background:#dbc98f;        /* new hover bg */
+  color:#1D3045;             /* new hover text color */
+  box-shadow:4px 5px 5px #473a0f;
 }
 
 /* If button contains an icon, change icon color too */
 .hero-btn:hover .hero-btn-icon {
-  color:#32563C;
+  color:#1D3045;
 }
 
 /* right image */
