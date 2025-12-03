@@ -1,4 +1,4 @@
-/* CSS Grid Layout - The Key Solution */
+/* --- MAIN LAYOUT --- */
 .floodmap-grid-container {
   display: grid;
   grid-template-areas:
@@ -10,13 +10,9 @@
   width: 100vw;
   overflow: hidden;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 }
 
-/* Navbar Area */
+/* --- NAVBAR --- */
 .floodmap-navbar {
   grid-area: navbar;
   background: #2c3e50;
@@ -29,6 +25,7 @@
   border-bottom: 3px solid #3498db;
   z-index: 1000;
   box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  position: relative;
 }
 
 .floodmap-navbar h1 {
@@ -42,7 +39,169 @@
   opacity: 0.9;
 }
 
-/* Sidebar Area */
+/* --- SELECTED MARKER LABEL (BOLD BLACK BOTTOM) --- */
+/* This style only applies when the className "barangay-tooltip-selected" is added */
+.leaflet-tooltip.barangay-tooltip-selected {
+  background-color: transparent !important; /* No white box */
+  border: none !important;                  /* No border */
+  box-shadow: none !important;              /* No shadow */
+  color: #000000;                           /* Black Text */
+  font-weight: 900;                         /* Bold */
+  font-size: 16px;
+  font-family: "Montserrat", sans-serif;
+  text-transform: uppercase;
+  margin-top: 5px; /* Spacing from pin */
+  
+  /* White outline to make text readable over map */
+  text-shadow: 
+    -2px -2px 0 #fff,  
+     2px -2px 0 #fff,
+    -2px  2px 0 #fff,
+     2px  2px 0 #fff;
+}
+
+/* Hide the little arrow triangle for the selected label */
+.leaflet-tooltip.barangay-tooltip-selected::before {
+  display: none;
+}
+
+/* --- OVERLAY STYLES --- */
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: calc(100vh - 60px);
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* UPDATED Z-INDEX TO BE HIGHER THAN MAP CONTROLS */
+  z-index: 2000; 
+}
+
+.upload-box, .loading-box {
+  background: white;
+  padding: 40px 60px;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+  text-align: center;
+  border: 2px solid #F3D79C;
+  max-width: 500px;
+}
+
+.upload-box h2 {
+  color: #2c3e50;
+  margin-top: 0;
+}
+
+.upload-input-wrapper {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.hidden-input {
+  display: none;
+}
+
+.upload-btn {
+  background: #3498db;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+  display: inline-block;
+  min-width: 220px;
+}
+
+.upload-btn:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+}
+
+.divider-text {
+  font-size: 14px;
+  color: #7f8c8d;
+  margin: 5px 0;
+}
+
+.bypass-btn {
+  background: transparent;
+  color: #7f8c8d;
+  border: 2px solid #bdc3c7;
+  padding: 10px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+  min-width: 220px;
+  font-family: inherit;
+}
+
+.bypass-btn:hover {
+  background: #f8f9fa;
+  color: #2c3e50;
+  border-color: #95a5a6;
+}
+
+/* RESET BUTTON */
+.reset-map-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: white;
+  color: #2c3e50;
+  border: 2px solid #F3D79C;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.reset-map-btn:hover {
+  background: #FFF7E5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* SPINNER */
+.spinner {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* SIDEBAR LAYOUT */
 .floodmap-sidebar {
   grid-area: sidebar;
   background: #FFF7E5;
@@ -67,7 +226,6 @@
   color: #2c3e50;
 }
 
-/* Search Input */
 .search-input {
   width: 100%;
   padding: 10px;
@@ -78,7 +236,6 @@
   font-size: 14px;
 }
 
-/* Filter Buttons */
 .risk-filter-buttons {
   margin-bottom: 20px;
   display: flex;
@@ -105,12 +262,6 @@
   font-weight: 600;
 }
 
-.risk-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-/* INFO PANEL */
 .info-panel {
   background: #FFFFFF;
   border: 1px solid #F3D79C;
@@ -128,35 +279,18 @@
   font-size: 1.1rem;
 }
 
-/* Barangay List Container */
 .barangay-list {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  min-height: 0; /* Crucial for flexbox scrolling */
+  min-height: 0;
   padding-right: 5px;
 }
 
-/* Custom scrollbar for barangay list */
-.barangay-list::-webkit-scrollbar {
-  width: 6px;
-}
+.barangay-list::-webkit-scrollbar { width: 6px; }
+.barangay-list::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+.barangay-list::-webkit-scrollbar-thumb { background: #F3D79C; border-radius: 10px; }
 
-.barangay-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.barangay-list::-webkit-scrollbar-thumb {
-  background: #F3D79C;
-  border-radius: 10px;
-}
-
-.barangay-list::-webkit-scrollbar-thumb:hover {
-  background: #E9D398;
-}
-
-/* Barangay Cards */
 .barangay-card {
   padding: 12px;
   border-radius: 10px;
@@ -174,18 +308,12 @@
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
 }
 
-.barangay-card.hovered {
-  background: #FFF1C4;
-  border-color: #3498db;
-}
-
 .barangay-card strong {
   color: #2c3e50;
   display: block;
   margin-bottom: 5px;
 }
 
-/* Main Map Area */
 .floodmap-main {
   grid-area: main;
   background: #f8f9fa;
@@ -199,7 +327,6 @@
   position: relative;
 }
 
-/* Leaflet Map Styling */
 .leaflet-map {
   width: 100% !important;
   height: 100% !important;
@@ -210,14 +337,6 @@
   bottom: 0 !important;
 }
 
-/* Fix Leaflet container */
-.leaflet-container {
-  width: 100% !important;
-  height: 100% !important;
-  font-family: inherit !important;
-}
-
-/* Placeholder text */
 .placeholder-text {
   opacity: 0.6;
   font-style: italic;
@@ -225,29 +344,40 @@
   color: #666;
 }
 
-/* Responsive adjustments */
 @media (max-width: 1024px) {
-  .floodmap-grid-container {
-    grid-template-columns: 280px 1fr;
-  }
-  
-  .sidebar-content {
-    padding: 15px;
-  }
+  .floodmap-grid-container { grid-template-columns: 280px 1fr; }
 }
 
 @media (max-width: 768px) {
   .floodmap-grid-container {
-    grid-template-areas:
-      "navbar"
-      "main"
-      "sidebar";
+    grid-template-areas: "navbar" "main" "sidebar";
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr 300px;
   }
+  .floodmap-sidebar { border-right: none; border-top: 2px solid #F3D79C; }
+  .overlay-container { top: 0; height: 100vh; position: fixed; z-index: 2000; }
+}
+
+.leaflet-tooltip.barangay-tooltip-selected {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #000000;
+  font-weight: 900; /* Extra Bold */
+  font-size: 16px;
+  font-family: "Montserrat", sans-serif;
+  text-transform: uppercase;
+  margin-top: 10px; /* Pushes text slightly down away from pin */
   
-  .floodmap-sidebar {
-    border-right: none;
-    border-top: 2px solid #F3D79C;
-  }
+  /* White outline to make text readable over map */
+  text-shadow: 
+    -2px -2px 0 #fff,  
+     2px -2px 0 #fff,
+    -2px  2px 0 #fff,
+     2px  2px 0 #fff;
+}
+
+/* Hide the tooltip arrow box for the selected label */
+.leaflet-tooltip.barangay-tooltip-selected::before {
+  display: none;
 }

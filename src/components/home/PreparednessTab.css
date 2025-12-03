@@ -6,6 +6,7 @@
   min-height: 90vh;
 }
 
+
 .prep-container {
   width: 90%;
   max-width: 1100px;
@@ -28,7 +29,7 @@
 .prep-tag h1 {
   color: #1D3045;
   font-weight: 800;
-  
+  font-size: large;
 
 }
 
@@ -38,6 +39,8 @@
   margin-top: 10px;
   margin-bottom: 10px;
   color: #1D3045;
+  font-size: 40px;
+  font-weight: 700;
 }
 
 .prep-tabs {
