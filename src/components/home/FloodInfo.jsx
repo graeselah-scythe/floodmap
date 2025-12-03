@@ -1,6 +1,6 @@
 import React from "react";
 import "./FloodInfo.css";
-import flood from "../assets/flood.jpg";
+import flood from "../../assets/flood.jpg";
 
 const FloodInfo = () => {
   return (

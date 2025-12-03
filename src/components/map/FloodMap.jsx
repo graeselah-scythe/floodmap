@@ -4,7 +4,7 @@ import "./FloodMap.css";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-import { cdo_geojson } from "../data/cdo_geojson";
+import { cdo_geojson } from "../../data/cdo_geojson";
 
 // CUSTOM MAP PIN ICONS (colored per risk)
 const pinIcon = (color) =>
