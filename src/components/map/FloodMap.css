@@ -68,12 +68,12 @@
 /* --- OVERLAY STYLES --- */
 .overlay-container {
   position: absolute;
-  top: 60px;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   width: 100%;
-  height: calc(100vh - 60px);
+  height: 100vh;
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
