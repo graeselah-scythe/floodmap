@@ -32,6 +32,7 @@ const HeroSection = () => {
         <img src={cdoMap} alt="Cagayan de Oro Map" />
       </div>
     </section>
+    
   );
 };
 
