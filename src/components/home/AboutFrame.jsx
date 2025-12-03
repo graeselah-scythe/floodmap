@@ -4,6 +4,9 @@ import "./AboutFrame.css";
 const AboutFrame = () => {
   return (
     <div className="about-section">
+      <h1 className="about-us-heading">
+        About Us
+      </h1>
       <p className="about-description">
         This project uses a Random Forest Machine Learning Model to classify barangays 
         into Low, Medium, High, or Very High Flood Risk using multi-source climate 
