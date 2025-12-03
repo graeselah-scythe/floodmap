@@ -1,6 +1,6 @@
 import React from "react";
 import "./HeroSection.css";
-import cdoMap from "../assets/cdoMap.png";
+import cdoMap from "../../assets/cdoMap.png";
 import { Icon } from '@iconify/react';
 import { useNavigate } from "react-router-dom";
 

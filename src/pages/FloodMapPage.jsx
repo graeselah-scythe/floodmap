@@ -1,11 +1,9 @@
-import Navbar from '../components/Navbar';
-import FloodMap from '../components/FloodMap.jsx';
-
+import React from 'react';
+import FloodMap from '../components/map/FloodMap';
 
 const FloodMapPage = () => {
   return (
     <div>
-      <Navbar />
       <FloodMap />
     </div>
   );
