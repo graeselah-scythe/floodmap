@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import { Tooltip, MapContainer, TileLayer, Marker, ZoomControl } from "react-leaflet";
 import "./FloodMap.css";
 import L from "leaflet";
@@ -37,12 +37,37 @@ const FloodMap = () => {
   // --- STATES ---
   const [appState, setAppState] = useState("upload"); 
   const [mapData, setMapData] = useState(cdo_geojson); 
-  const [modelInfo, setModelInfo] = useState(null); // Store model evaluation info
+  const [modelInfo, setModelInfo] = useState(null);
   
   const [search, setSearch] = useState("");
   const [riskFilter, setRiskFilter] = useState("All");
   const [hovered, setHovered] = useState(null);
   const [selectedBarangay, setSelectedBarangay] = useState(null);
+  
+  // New state for model panel visibility
+  const [showModelPanel, setShowModelPanel] = useState(false);
+  const [modelPanelTimeout, setModelPanelTimeout] = useState(null);
+
+  // --- EFFECTS ---
+  // Auto-hide model panel after 10 seconds
+  useEffect(() => {
+    if (modelInfo && showModelPanel) {
+      // Clear existing timeout
+      if (modelPanelTimeout) {
+        clearTimeout(modelPanelTimeout);
+      }
+      
+      // Set new timeout to hide panel after 10 seconds
+      const timeout = setTimeout(() => {
+        setShowModelPanel(false);
+      }, 10000);
+      
+      setModelPanelTimeout(timeout);
+      
+      // Cleanup
+      return () => clearTimeout(timeout);
+    }
+  }, [modelInfo, showModelPanel]);
 
   // --- HANDLERS ---
   const handleFileUpload = async (event) => {
@@ -54,7 +79,6 @@ const FloodMap = () => {
     try {
       const result = await trainAndPredict(file, cdo_geojson);
       
-      // Make sure we have valid GeoJSON data
       if (result && result.geojson) {
         setMapData(result.geojson);
         setModelInfo({
@@ -64,6 +88,7 @@ const FloodMap = () => {
           sampleCount: result.sampleCount,
           confusionMatrix: result.confusionMatrix
         });
+        setShowModelPanel(true); // Show panel when training completes
         setAppState("map");
       } else {
         throw new Error("Invalid training result");
@@ -72,7 +97,7 @@ const FloodMap = () => {
       console.error("Training Error:", error);
       alert("Error processing CSV. Please check the format and try again.");
       setAppState("upload");
-      setMapData(cdo_geojson); // Reset to default
+      setMapData(cdo_geojson);
     }
   };
 
@@ -82,6 +107,30 @@ const FloodMap = () => {
     setAppState("map");
   };
 
+  // Model panel handlers
+  const handleModelPanelToggle = () => {
+    if (modelPanelTimeout) {
+      clearTimeout(modelPanelTimeout);
+      setModelPanelTimeout(null);
+    }
+    setShowModelPanel(!showModelPanel);
+  };
+
+  const handleModelPanelMouseEnter = () => {
+    if (modelPanelTimeout) {
+      clearTimeout(modelPanelTimeout);
+    }
+  };
+
+  const handleModelPanelMouseLeave = () => {
+    if (showModelPanel) {
+      const timeout = setTimeout(() => {
+        setShowModelPanel(false);
+      }, 5000);
+      setModelPanelTimeout(timeout);
+    }
+  };
+
   // --- HELPERS ---
   const getRiskColor = (risk) => {
     switch (risk) {
@@ -89,6 +138,7 @@ const FloodMap = () => {
       case "High": return "#FB8C00";
       case "Medium": return "#FDD835";
       case "Low": return "#43A047";
+      case "No Data": return "#757575"; // Grey for no data
       default: return "#757575";
     }
   };
@@ -99,6 +149,7 @@ const FloodMap = () => {
       case "High": return "orange";
       case "Medium": return "yellow";
       case "Low": return "green";
+      case "No Data": return "grey"; // Grey for no data
       default: return "grey";
     }
   };
@@ -110,16 +161,22 @@ const FloodMap = () => {
   };
 
   const filteredBarangays = useMemo(() => {
-    // Always check if mapData and features exist
     if (!mapData || !mapData.features) return [];
     
     return mapData.features.filter((f) => {
       if (!f.properties) return false;
       
-      const matchRisk = riskFilter === "All" || f.properties.risk === riskFilter;
-      const matchSearch = f.properties.barangay && 
-                         f.properties.barangay.toLowerCase().includes(search.toLowerCase());
-      return matchRisk && matchSearch;
+      if (riskFilter === "All") return true;
+      if (riskFilter === "No Data") {
+        return f.properties.risk === "No Data" || 
+               (f.properties.predicted === false && !f.properties.risk);
+      }
+      return f.properties.risk === riskFilter;
+    }).filter(f => {
+      // Filter by search
+      if (!search.trim()) return true;
+      return f.properties.barangay && 
+             f.properties.barangay.toLowerCase().includes(search.toLowerCase());
     });
   }, [mapData, search, riskFilter]);
 
@@ -127,7 +184,6 @@ const FloodMap = () => {
   const setMapInstance = (map) => {
     mapRef.current = map;
     if (map) {
-      // Delay slightly to ensure map container is fully rendered
       setTimeout(() => {
         try {
           map.invalidateSize();
@@ -160,9 +216,9 @@ const FloodMap = () => {
     setSelectedBarangay(null);
   };
 
-  // Feature importance display
-  const renderFeatureImportances = () => {
-    if (!modelInfo || !modelInfo.featureImportances) return null;
+  // Model panel content
+  const renderModelPanelContent = () => {
+    if (!modelInfo) return null;
     
     const featureNames = modelInfo.featureNames || [
       'Elevation', 'Drainage', 'Proximity', 'Urbanization', 
@@ -170,21 +226,40 @@ const FloodMap = () => {
     ];
     
     return (
-      <div className="model-info">
-        <h4>Model Performance</h4>
-        <p><strong>Accuracy:</strong> {modelInfo.accuracy}%</p>
-        <p><strong>Samples Trained:</strong> {modelInfo.sampleCount}</p>
+      <div className="model-panel-content">
+        <div className="model-panel-header">
+          <h4>Model Performance</h4>
+          <button 
+            className="close-btn"
+            onClick={() => setShowModelPanel(false)}
+            onMouseEnter={handleModelPanelMouseEnter}
+          >
+            ×
+          </button>
+        </div>
+        
+        <div className="model-stats">
+          <div className="stat-item">
+            <span className="stat-label">Accuracy:</span>
+            <span className="stat-value">{modelInfo.accuracy}%</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-label">Samples:</span>
+            <span className="stat-value">{modelInfo.sampleCount}</span>
+          </div>
+        </div>
+        
         <div className="feature-importance">
-          <h5>Feature Importance:</h5>
+          <h5>Feature Importance</h5>
           {modelInfo.featureImportances.map((importance, index) => (
             <div key={index} className="feature-bar">
-              <span>{featureNames[index] || `Feature ${index}`}</span>
+              <span className="feature-name">{featureNames[index] || `Feature ${index}`}</span>
               <div className="bar-container">
                 <div 
                   className="bar" 
                   style={{ width: `${importance * 100}%` }}
                 >
-                  {Math.round(importance * 100)}%
+                  <span className="bar-percentage">{Math.round(importance * 100)}%</span>
                 </div>
               </div>
             </div>
@@ -209,11 +284,19 @@ const FloodMap = () => {
           />
 
           <div className="risk-filter-buttons">
-            {["All", "Low", "Medium", "High", "Very High"].map((risk) => (
+            {["All", "No Data", "Low", "Medium", "High", "Very High"].map((risk) => (
               <button
                 key={risk}
                 onClick={() => setRiskFilter(risk)}
                 className={`risk-btn ${riskFilter === risk ? "active" : ""}`}
+                style={{ 
+                  backgroundColor: risk === "No Data" ? "#757575" : 
+                    risk === "Low" ? "#43A047" :
+                    risk === "Medium" ? "#FDD835" :
+                    risk === "High" ? "#FB8C00" :
+                    risk === "Very High" ? "#E53935" : "#f0f0f0",
+                  color: risk === "Medium" ? "#333" : "white"
+                }}
               >
                 {risk}
               </button>
@@ -226,7 +309,7 @@ const FloodMap = () => {
                 <h3>{selectedBarangay.barangay}</h3>
                 <p><strong>Flood Risk: </strong>
                   <span style={{ color: getRiskColor(selectedBarangay.risk) }}>
-                    {selectedBarangay.risk}
+                    {selectedBarangay.risk || "No Data"}
                   </span>
                 </p>
                 {selectedBarangay.predicted !== undefined && (
@@ -255,8 +338,6 @@ const FloodMap = () => {
             )}
           </div>
 
-          {modelInfo && renderFeatureImportances()}
-
           <div className="barangay-list">
             {filteredBarangays.length === 0 ? (
               <p className="no-results">No barangays found</p>
@@ -271,7 +352,7 @@ const FloodMap = () => {
                 >
                   <strong>{f.properties.barangay}</strong>
                   <span style={{ color: getRiskColor(f.properties.risk) }}>
-                    {f.properties.risk}
+                    {f.properties.risk || "No Data"}
                     {f.properties.predicted && " ✓"}
                   </span>
                 </div>
@@ -312,12 +393,13 @@ const FloodMap = () => {
 
               {filteredBarangays.map((f, index) => {
                 const isSelected = selectedBarangay && selectedBarangay.barangay === f.properties.barangay;
+                const risk = f.properties.risk || "No Data";
                 
                 return (
                   <Marker
                     key={index}
                     position={[f.geometry.coordinates[1], f.geometry.coordinates[0]]}
-                    icon={getDynamicIcon(f.properties.risk, isSelected)}
+                    icon={getDynamicIcon(risk, isSelected)}
                     zIndexOffset={isSelected ? 1000 : 0} 
                     eventHandlers={{ click: () => flyToBarangay(f) }}
                   >
@@ -329,7 +411,7 @@ const FloodMap = () => {
                       permanent={isSelected} 
                       className={isSelected ? "barangay-tooltip-selected" : ""}
                     >
-                      {f.properties.barangay}
+                      {f.properties.barangay}: {risk}
                     </Tooltip>
                   </Marker>
                 );
@@ -338,6 +420,27 @@ const FloodMap = () => {
           )}
         </div>
       </main>
+
+      {/* Model Performance Panel */}
+      {modelInfo && (
+        <div 
+          className={`model-panel ${showModelPanel ? 'expanded' : 'collapsed'}`}
+          onMouseEnter={handleModelPanelMouseEnter}
+          onMouseLeave={handleModelPanelMouseLeave}
+        >
+          {showModelPanel ? (
+            renderModelPanelContent()
+          ) : (
+            <button 
+              className="model-panel-toggle"
+              onClick={handleModelPanelToggle}
+              title="Show Model Performance"
+            >
+              ?
+            </button>
+          )}
+        </div>
+      )}
 
       {/* OVERLAYS */}
       {appState === 'upload' && (
