@@ -64,26 +64,41 @@ const PreparednessTab = () => {
           {activeTab === "during" && (
             <>
               <h2 className="section-title">During a Flood</h2>
-              <ul className="prep-list">
-                <li>Stay calm and follow instructions from authorities.</li>
-                <li>Avoid walking or driving through floodwaters.</li>
-                <li>Move immediately to higher ground.</li>
-                <li>Keep emergency kit accessible.</li>
-                <li>Stay updated through radio, TV, or official social media pages.</li>
-              </ul>
+              
+              <div className="prep-steps">
+                {[
+                  "Stay calm and follow instructions from authorities.",
+                  "Avoid walking or driving through floodwaters.",
+                  "Move immediately to higher ground.",
+                  "Keep emergency kit accessible.",
+                  "Stay updated through radio, TV, or official social media pages.",
+                ].map((step, index) => (
+                  <div className="step-card" key={index}>
+                    <div className="step-number">{index + 1}</div>
+                    <p>{step}</p>
+                  </div>
+                ))}
+              </div>
             </>
           )}
 
           {activeTab === "after" && (
             <>
               <h2 className="section-title">After a Flood</h2>
-              <ul className="prep-list">
-                <li>Return home only when authorities say it is safe.</li>
-                <li>Check property for structural damage.</li>
-                <li>Avoid using electrical appliances until inspected.</li>
-                <li>Document damage for insurance and reporting.</li>
-                <li>Clean and disinfect everything that got wet.</li>
-              </ul>
+              <div className="prep-steps">
+                {[
+                  "Return home only when authorities say it is safe.",
+                  "Check property for structural damage.",
+                  "Avoid using electrical appliances until inspected.",
+                  "Document damage for insurance and reporting.",
+                  "Clean and disinfect everything that got wet.",
+                ].map((step, index) => (
+                  <div className="step-card" key={index}>
+                    <div className="step-number">{index + 1}</div>
+                    <p>{step}</p>
+                  </div>
+                ))}
+              </div>
             </>
           )}
         </div>

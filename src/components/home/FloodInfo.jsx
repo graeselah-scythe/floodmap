@@ -43,8 +43,6 @@ const FloodInfo = () => {
             <li>Difficulty in identifying high-risk areas before disasters strike</li> <br />
             <li>Need for data-driven tools to support emergency response planning</li> <br />
           </ul>
-
-          <button className="learn-btn">Learn More</button>
         </div>
 
        <div className="stats-right">
