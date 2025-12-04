@@ -246,8 +246,7 @@
   margin: 5px 0;
 }
 
-<<<<<<< HEAD
-=======
+
 /* BYPASS BUTTON */
 .bypass-btn {
   background: transparent;
@@ -362,7 +361,6 @@
 .bypass-btn:disabled:hover {
   background: transparent !important;
 }
->>>>>>> 1c294e61056fba1f4aa8296fe33a110c819db230
 
 /* RESET BUTTON */
 .reset-map-btn {

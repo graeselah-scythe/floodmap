@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // Updated floodRiskModel.js - WITH ERROR HANDLING
 
 import * as Papa from 'papaparse';
@@ -507,5 +506,3 @@ export default {
   trainAndPredict,
   utils
 };
-=======
->>>>>>> 1c294e61056fba1f4aa8296fe33a110c819db230
