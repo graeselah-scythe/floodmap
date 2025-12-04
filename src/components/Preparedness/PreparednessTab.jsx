@@ -33,13 +33,12 @@ const PreparednessTab = () => {
   return (
     <div className="prep-wrapper">
       <div className="prep-container">
-
         {/* HEADER */}
-    <div className="prep-header">
-  <div className="prep-tag-box">
-  <Icon icon="material-symbols:warning-outline" className="warning-icon" />
-  Stay Prepared, Stay Safe
-</div>
+        <div className="prep-header">
+          <div className="prep-tag-box">
+            <Icon icon="material-symbols:warning-outline" className="warning-icon" />
+            Stay Prepared, Stay Safe
+          </div>
 
           <h1>Flood Preparedness Hub</h1>
           <p>
@@ -74,54 +73,29 @@ const PreparednessTab = () => {
 
         {/* CONTENT */}
         <div className="prep-content">
-          {(activeTab === "before" ||
-            activeTab === "during" ||
-            activeTab === "after") && (
-            <>
+          {/* TITLE PER TAB */}
+          <h2 className="section-title">
+            {activeTab === "before" && "Preparation Steps"}
+            {activeTab === "during" && "Safety Steps During a Flood"}
+            {activeTab === "after" && "Recovery Steps After a Flood"}
+          </h2>
 
-              {/* TITLE PER TAB */}
-              <h2 className="section-title">
-                {activeTab === "before" && "Preparation Steps"}
-                {activeTab === "during" && "Safety Steps During a Flood"}
-                {activeTab === "after" && "Recovery Steps After a Flood"}
-              </h2>
-
-              {/* STEP CARDS */}
-              <div className="prep-steps">
-                {(activeTab === "before"
-                  ? beforeSteps
-                  : activeTab === "during"
-                  ? duringSteps
-                  : afterSteps
-                ).map((step, index) => (
-                  <div className="step-card" key={index}>
-                    <div className="step-number">{index + 1}</div>
-                    <p>{step}</p>
-                  </div>
-                ))}
+          {/* STEP CARDS */}
+          <div className="prep-steps">
+            {(activeTab === "before"
+              ? beforeSteps
+              : activeTab === "during"
+              ? duringSteps
+              : afterSteps
+            ).map((step, index) => (
+              <div className="step-card" key={index}>
+                <div className="step-number">{index + 1}</div>
+                <div className="step-content">
+                  <p className="step-text">{step}</p>
+                </div>
               </div>
-
-              {/* EMERGENCY CONTACTS */}
-              <div className="contacts-card">
-                <h3>Emergency Contacts</h3>
-                <ul>
-                  <li>
-                    <strong>CDRRMO Emergency Hotline:</strong> 0917-722-4677
-                  </li>
-                  <li>
-                    <strong>PNP CDO:</strong> 0998-857-2333
-                  </li>
-                  <li>
-                    <strong>City Health Office:</strong> (088) 865-1420
-                  </li>
-                  <li>
-                    <strong>Fire Department:</strong> (088) 857-1332
-                  </li>
-                </ul>
-              </div>
-
-            </>
-          )}
+            ))}
+          </div>
         </div>
       </div>
     </div>
