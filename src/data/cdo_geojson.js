@@ -7,13 +7,15 @@ export const cdo_geojson = {
       "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
     }
   },
-  "type": "FeatureCollection",
   "features": [
     {
       "type": "Feature",
       "properties": {
         "barangay": "Agusan",
-        "risk": "low"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -27,7 +29,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Baikingon",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -42,7 +47,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Balubal",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -56,7 +64,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Balulang",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -70,7 +81,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 1",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -84,7 +98,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 2",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -98,7 +115,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 3",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -112,7 +132,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 4",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -127,7 +150,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 5",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -141,7 +167,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 6",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -156,7 +185,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 7",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -171,7 +203,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 8",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -185,7 +220,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 9",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -200,7 +238,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 10",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -214,7 +255,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 11",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -228,7 +272,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 12",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -243,7 +290,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 13",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -257,7 +307,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 14",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -271,7 +324,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 15",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -285,7 +341,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 16",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -299,7 +358,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 17",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -314,7 +376,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 18",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -329,7 +394,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 19",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -343,7 +411,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 20",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -357,7 +428,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 21",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -371,7 +445,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 22",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -385,7 +462,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 23",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -399,7 +479,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 24",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -413,7 +496,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 25",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -427,7 +513,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 26",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -441,7 +530,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 27",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -455,7 +547,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 28",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -469,7 +564,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 29",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -483,7 +581,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 30",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -497,7 +598,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 31",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -511,7 +615,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 32",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -525,7 +632,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 33",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -539,7 +649,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 34",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -553,7 +666,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 35",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -567,7 +683,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 36",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -581,7 +700,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 37",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -595,7 +717,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 38",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -609,7 +734,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 39",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -623,7 +751,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "barangay 40",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -637,7 +768,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Bayabas",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -651,7 +785,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Bayanga",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -665,7 +802,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Besigan",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -679,7 +819,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Bonbon",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -693,7 +836,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Bugo",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -707,7 +853,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Bulua",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -721,7 +870,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Camaman-an",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -735,7 +887,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Canitoan",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -749,7 +904,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Carmen",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -763,7 +921,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Consolacion",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -777,7 +938,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Cugman",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -791,7 +955,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Dansolihon",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -805,7 +972,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "F. S. Catanico",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -819,7 +989,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Gusa",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -833,7 +1006,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Indahag",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -847,7 +1023,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Iponan",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -861,7 +1040,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Kauswagan",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -875,7 +1057,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Lapasan",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -889,7 +1074,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Lumbia",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -903,7 +1091,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Macabalan",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -917,7 +1108,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Macasandig",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -931,7 +1125,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Mambuaya",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -945,7 +1142,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Nazareth",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -959,7 +1159,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Pagalungan",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -973,7 +1176,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Pagatpat",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -987,7 +1193,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Patag",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -1001,7 +1210,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Pigsag-An",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -1016,7 +1228,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Puerto",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -1030,7 +1245,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Puntod",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -1044,7 +1262,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "San Simon",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -1058,7 +1279,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Tablon",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -1072,7 +1296,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Taglimao",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -1086,7 +1313,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Tagpangi",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -1100,7 +1330,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Tignapoloan",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -1114,7 +1347,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Tuburan",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -1128,7 +1364,10 @@ export const cdo_geojson = {
       "type": "Feature",
       "properties": {
         "barangay": "Tumpagon",
-        "risk": "High"
+        "risk": "No Data",
+        "predicted": false,
+        "confidence": "N/A",
+        "survey_entries": 0
       },
       "geometry": {
         "coordinates": [
@@ -1139,4 +1378,4 @@ export const cdo_geojson = {
       }
     }
   ]
-}
+};
