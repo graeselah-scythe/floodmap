@@ -17,6 +17,14 @@
   max-width: 1200px;
   margin: 0 auto;
 }
+.about-us-heading {
+  font-family: "Montserrat", sans-serif;
+  font-size: 50px;
+  font-weight: 800;
+  color: #1D3045;
+  margin-bottom: 20px;
+  text-align: center;
+}
 
 /* Left column - Heading */
 .about-left {
@@ -39,6 +47,7 @@
 .about-heading {
   font-family: "Montserrat", sans-serif;
   font-size: 100px;
+  line-height: 1.1;
   font-weight: 900;
   color: #1D3045;
   margin: 0;
