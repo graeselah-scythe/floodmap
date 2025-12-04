@@ -6,64 +6,41 @@ const Footer = () => {
   return (
     <footer className="footer-container">
       <div className="footer-content">
-        
-        {/* Logo and Tagline Section */}
-        <div className="footer-brand">
-          <div className="footer-logo">
-            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-              <path 
-                d="M30 5C16.1925 5 5 16.1925 5 30C5 43.8075 16.1925 55 30 55C43.8075 55 55 43.8075 55 30C55 16.1925 43.8075 5 30 5Z" 
-                fill="#1D3045"
-              />
-              <path 
-                d="M30 15L40 30L30 45L20 30L30 15Z" 
-                fill="#57876E"
-              />
-              <path 
-                d="M30 35C32.7614 35 35 32.7614 35 30C35 27.2386 32.7614 25 30 25C27.2386 25 25 27.2386 25 30C25 32.7614 27.2386 35 30 35Z" 
-                fill="#F3D79C"
-              />
-              <path 
-                d="M35 40L40 35L45 40L40 45L35 40Z" 
-                fill="#E1C158"
-                opacity="0.8"
-              />
-            </svg>
-            <h2 className="footer-title">CDO FloodWatch</h2>
-          </div>
-          <p className="footer-tagline">
-            Building a flood-resilient Cagayan de Oro through AI-powered 
-            risk assessment and community preparedness.
-          </p>
-        </div>
-
-        {/* Divider Line */}
-        <div className="footer-divider">
-          <svg width="100%" height="2">
-            <line 
-              x1="0" y1="1" 
-              x2="100%" y2="1" 
-              stroke="rgba(255,255,255,0.2)" 
-              strokeWidth="2" 
-              strokeDasharray="5,5"
-            />
-          </svg>
-        </div>
-
-        {/* Quick Links and Contact Section */}
-        <div className="footer-bottom">
-          
-          {/* Quick Links */}
-          <div className="footer-links">
-            <h3 className="footer-section-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        {/* Three Column Layout */}
+        <div className="footer-top">
+          {/* Column 1: Brand */}
+          <div className="footer-brand">
+            <div className="footer-logo">
+              <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
                 <path 
-                  d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.04L12 21.35Z" 
+                  d="M30 5C16.1925 5 5 16.1925 5 30C5 43.8075 16.1925 55 30 55C43.8075 55 55 43.8075 55 30C55 16.1925 43.8075 5 30 5Z" 
+                  fill="#1D3045"
+                />
+                <path 
+                  d="M30 15L40 30L30 45L20 30L30 15Z" 
+                  fill="#57876E"
+                />
+                <path 
+                  d="M30 35C32.7614 35 35 32.7614 35 30C35 27.2386 32.7614 25 30 25C27.2386 25 25 27.2386 25 30C25 32.7614 27.2386 35 30 35Z" 
                   fill="#F3D79C"
                 />
+                <path 
+                  d="M35 40L40 35L45 40L40 45L35 40Z" 
+                  fill="#E1C158"
+                  opacity="0.8"
+                />
               </svg>
-              Quick Links
-            </h3>
+              <h2 className="footer-title">CDO FloodWatch</h2>
+            </div>
+            <p className="footer-tagline">
+              Building a flood-resilient Cagayan de Oro through AI-powered 
+              risk assessment and community preparedness.
+            </p>
+          </div>
+
+          {/* Column 2: Quick Links */}
+          <div className="footer-links">
+            <h3 className="footer-section-title">Quick Links</h3>
             <ul className="link-list">
               <li>
                 <Link to="/map" className="footer-link">
@@ -101,17 +78,9 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact Information */}
+          {/* Column 3: Contact Us */}
           <div className="footer-contact">
-            <h3 className="footer-section-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path 
-                  d="M20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" 
-                  fill="#F3D79C"
-                />
-              </svg>
-              Contact Us
-            </h3>
+            <h3 className="footer-section-title">Contact Us</h3>
             <div className="contact-info">
               <div className="contact-item">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -133,9 +102,8 @@ const Footer = () => {
               </div>
             </div>
           </div>
-
         </div>
-
+        
         {/* Copyright Section */}
         <div className="footer-copyright">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -146,7 +114,6 @@ const Footer = () => {
           </svg>
           <span>© 2025 CDO FloodWatch. Built for Cagayan de Oro City, All rights reserved.</span>
         </div>
-
       </div>
     </footer>
   );

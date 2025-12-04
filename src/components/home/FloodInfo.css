@@ -1,0 +1,148 @@
+.stats-wrapper {
+  width: 100%;
+  min-height:600px;
+  padding:60 90px;
+  background: #FFFFFF;
+}
+
+/* --- TOP NUMBERS --- */
+.stats-gradient-box {
+  width: 100%;
+  padding: 0 0 25px 0; /* remove top space */
+  background: linear-gradient(
+    to bottom,
+    #FFFFFF 65%,
+    #F3D79C 100%,
+    #F3D79C 100%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.stats-numbers {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+}
+
+.stats-box h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 48px;
+  margin: 10px 10px 0 10px;
+  font-weight: 700;
+  color: #1D3045;
+  text-align: center;
+}
+
+.stats-box p {
+  text-align: center;
+  margin-top: -10px;
+  font-size: 17px;
+  font-weight: 500;
+  color: #1D3045;
+}
+
+/* --- MAIN CONTENT --- */
+.stats-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 50px;
+  padding: 0 40px; 
+  margin: 40px;;
+}
+
+.stats-left {
+  max-width: 50%;
+}
+
+.stats-left h1 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 40px;
+  font-weight: 750;
+  color: #1D3045;
+  margin-bottom: 20px;
+}
+
+.stats-desc {
+  color: #1D3045;
+  line-height: 1.7;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.stats-left ul {
+  margin-left: 16px;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+.stats-left ul li {
+  line-height: 1;
+  color:#1D3045;
+}
+
+/* BUTTON */
+.learn-btn {
+  padding: 12px 22px;
+  background: #D2E0D9;
+  margin-left: 15px;
+  color: #1D3045;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.learn-btn:hover {
+  background: #E1C158;
+  color: #2B4733;
+}
+
+/* --- RIGHT IMAGE --- */
+.stats-right img {
+  width: 700px;
+  margin: -15px 10px 0 10px;
+  border-radius: 18px;
+  box-shadow: 0px 8px 24px rgba(0,0,0,0.18);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.stats-right img:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 8px 30px #1a5c3a98;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+  .stats-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .stats-left {
+    max-width: 100%;
+  }
+
+ .stats-right img {
+  width: 500px;
+  border-radius: 12px; /* softer corners inside the frame */
+  display: block;
+  }
+  .image-frame {
+  padding: 15px;
+  background: #F5E9C8; /* soft beige frame (match your picture) */
+  border-radius: 20px;
+  box-shadow: 0px 8px 24px rgba(0,0,0,0.15);
+
+  display: inline-block; /* keeps the frame tight */
+}
+
+
+  .stats-numbers {
+    flex-direction: column;
+    gap: 20px;
+  }
+}

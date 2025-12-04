@@ -1,7 +1,8 @@
-/* Footer Container */
+/* ===== FOOTER CONTAINER ===== */
 .footer-container {
   background: linear-gradient(180deg, #1D3045 0%, #0F1C2B 100%);
   color: #D2E0D9;
+  padding: 40px 90px 30px;
   position: relative;
   overflow: hidden;
 }
@@ -27,16 +28,29 @@
   z-index: 1;
 }
 
-/* Brand Section */
+/* ===== THREE COLUMN LAYOUT ===== */
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+/* Column 1: Brand (Left) */
 .footer-brand {
-  margin-bottom: 40px;
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+  text-align: left;
 }
 
 .footer-logo {
   display: flex;
   align-items: center;
   gap: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .footer-title {
@@ -49,6 +63,7 @@
   background-clip: text;
   margin: 0;
   letter-spacing: 0.5px;
+  line-height: 1.2;
 }
 
 .footer-tagline {
@@ -56,42 +71,28 @@
   font-size: 16px;
   line-height: 1.6;
   color: #B8C9C0;
-  max-width: 600px;
   margin: 0;
   font-weight: 400;
+  max-width: 350px;
 }
 
-/* Divider */
-.footer-divider {
-  margin: 40px 0;
-  opacity: 0.5;
+/* Column 2: Quick Links (Center) */
+.footer-links {
+  flex: 1;
+  min-width: 180px;
+  text-align: center;
+  padding: 0 20px;
 }
 
-/* Bottom Section */
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  gap: 60px;
-  margin-bottom: 40px;
-  flex-wrap: wrap;
-}
-
-/* Section Titles */
 .footer-section-title {
   font-family: 'Montserrat', sans-serif;
   font-size: 18px;
   font-weight: 600;
   color: #F3D79C;
   margin-bottom: 20px;
+  margin-left: 30px;  
   display: flex;
-  align-items: center;
   gap: 10px;
-}
-
-/* Links Section */
-.footer-links {
-  flex: 1;
-  min-width: 200px;
 }
 
 .link-list {
@@ -107,7 +108,9 @@
 .footer-link {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: flex-start;
+  margin-left: 30px;  
+  gap: 20px;
   font-family: 'Montserrat', sans-serif;
   font-size: 15px;
   color: #D2E0D9;
@@ -129,16 +132,22 @@
   transform: scale(1.1);
 }
 
-/* Contact Section */
+/* Column 3: Contact Us (Right) */
 .footer-contact {
   flex: 1;
   min-width: 200px;
 }
 
+.footer-contact .footer-section-title {
+  justify-content: flex-start;
+}
+
 .contact-info {
   display: flex;
+  margin-left: 30px;  
   flex-direction: column;
   gap: 15px;
+  align-items: flex-start;
 }
 
 .contact-item {
@@ -155,7 +164,7 @@
 }
 
 .contact-item:hover span {
-  color: #F3D79C;
+  color: #F3C158;
 }
 
 .contact-item svg {
@@ -165,8 +174,7 @@
 .contact-item:hover svg {
   transform: scale(1.1);
 }
-
-/* Copyright */
+/* ===== COPYRIGHT ===== */
 .footer-copyright {
   display: flex;
   align-items: center;
@@ -184,10 +192,14 @@
   flex-shrink: 0;
 }
 
-/* Responsive Design */
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 1024px) {
   .footer-container {
-    padding: 50px 60px 25px;
+    padding: 50px 0px 25px;
+  }
+  
+  .footer-top {
+    gap: 30px;
   }
   
   .footer-title {
@@ -199,20 +211,33 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .footer-container {
     padding: 40px 40px 20px;
   }
   
-  .footer-bottom {
+  .footer-top {
     flex-direction: column;
     gap: 40px;
+    align-items: center;
+  }
+  
+  .footer-brand,
+  .footer-links,
+  .footer-contact {
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
   }
   
   .footer-logo {
+    justify-content: center;
     flex-direction: column;
-    text-align: center;
     gap: 10px;
+  }
+  
+  .footer-tagline {
+    margin: 0 auto;
   }
   
   .footer-title {
@@ -220,19 +245,15 @@
   }
   
   .footer-tagline {
-    text-align: center;
     font-size: 14px;
+    max-width: 500px;
   }
   
   .footer-section-title {
     justify-content: center;
   }
   
-  .link-list {
-    text-align: center;
-  }
-  
-  .footer-link {
+  .footer-contact .footer-section-title {
     justify-content: center;
   }
   
@@ -240,14 +261,18 @@
     align-items: center;
   }
   
+  .contact-item {
+    flex-direction: row; /* Reset to normal on mobile */
+    justify-content: center;
+  }
+  
   .footer-copyright {
     flex-direction: column;
     gap: 8px;
-    text-align: center;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .footer-container {
     padding: 30px 20px 15px;
   }
@@ -270,7 +295,7 @@
   }
 }
 
-/* Animation */
+/* ===== ANIMATIONS ===== */
 @keyframes fadeInUp {
   from {
     opacity: 0;
