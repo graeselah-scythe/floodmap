@@ -381,3 +381,97 @@
 .leaflet-tooltip.barangay-tooltip-selected::before {
   display: none;
 }
+
+/* Add these to FloodMap.css */
+
+.format-note {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 10px 0;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  line-height: 1.4;
+}
+
+.loading-detail {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 10px;
+}
+
+.model-info {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+}
+
+.model-info h4 {
+  margin-top: 0;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+}
+
+.model-info p {
+  margin: 8px 0;
+  font-size: 0.9rem;
+}
+
+.feature-importance {
+  margin-top: 15px;
+}
+
+.feature-importance h5 {
+  margin: 10px 0 5px 0;
+  color: #555;
+}
+
+.feature-bar {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+}
+
+.feature-bar span {
+  flex: 0 0 120px;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.bar-container {
+  flex: 1;
+  height: 20px;
+  background: #e9ecef;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-left: 10px;
+}
+
+.bar-container .bar {
+  height: 100%;
+  background: linear-gradient(90deg, #007bff, #0056b3);
+  color: white;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  min-width: 40px;
+  transition: width 0.5s ease;
+}
+
+.no-results {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-style: italic;
+}
+
+.barangay-card span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}

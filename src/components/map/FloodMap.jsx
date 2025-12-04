@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo } from "react";
-import { Tooltip, MapContainer, TileLayer, Marker, ZoomControl } from "react-leaflet"; // Added ZoomControl
+import { Tooltip, MapContainer, TileLayer, Marker, ZoomControl } from "react-leaflet";
 import "./FloodMap.css";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -37,6 +37,7 @@ const FloodMap = () => {
   // --- STATES ---
   const [appState, setAppState] = useState("upload"); 
   const [mapData, setMapData] = useState(cdo_geojson); 
+  const [modelInfo, setModelInfo] = useState(null); // Store model evaluation info
   
   const [search, setSearch] = useState("");
   const [riskFilter, setRiskFilter] = useState("All");
@@ -51,18 +52,33 @@ const FloodMap = () => {
     setAppState("training");
 
     try {
-      const processedGeoJson = await trainAndPredict(file, cdo_geojson);
-      setMapData(processedGeoJson);
-      setAppState("map");
+      const result = await trainAndPredict(file, cdo_geojson);
+      
+      // Make sure we have valid GeoJSON data
+      if (result && result.geojson) {
+        setMapData(result.geojson);
+        setModelInfo({
+          accuracy: result.accuracy,
+          featureImportances: result.featureImportances,
+          featureNames: result.featureNames,
+          sampleCount: result.sampleCount,
+          confusionMatrix: result.confusionMatrix
+        });
+        setAppState("map");
+      } else {
+        throw new Error("Invalid training result");
+      }
     } catch (error) {
       console.error("Training Error:", error);
-      alert("Error processing CSV. Check format.");
+      alert("Error processing CSV. Please check the format and try again.");
       setAppState("upload");
+      setMapData(cdo_geojson); // Reset to default
     }
   };
 
   const handleBypass = () => {
     setMapData(cdo_geojson);
+    setModelInfo(null);
     setAppState("map");
   };
 
@@ -94,10 +110,15 @@ const FloodMap = () => {
   };
 
   const filteredBarangays = useMemo(() => {
-    if (!mapData) return [];
+    // Always check if mapData and features exist
+    if (!mapData || !mapData.features) return [];
+    
     return mapData.features.filter((f) => {
+      if (!f.properties) return false;
+      
       const matchRisk = riskFilter === "All" || f.properties.risk === riskFilter;
-      const matchSearch = f.properties.barangay.toLowerCase().includes(search.toLowerCase());
+      const matchSearch = f.properties.barangay && 
+                         f.properties.barangay.toLowerCase().includes(search.toLowerCase());
       return matchRisk && matchSearch;
     });
   }, [mapData, search, riskFilter]);
@@ -106,13 +127,20 @@ const FloodMap = () => {
   const setMapInstance = (map) => {
     mapRef.current = map;
     if (map) {
-      setTimeout(() => map.invalidateSize(), 100);
+      // Delay slightly to ensure map container is fully rendered
+      setTimeout(() => {
+        try {
+          map.invalidateSize();
+        } catch (error) {
+          console.warn("Map size invalidation error:", error);
+        }
+      }, 300);
     }
   };
 
   const flyToBarangay = (barangay) => {
     const map = mapRef.current;
-    if (!map) return;
+    if (!map || !barangay.geometry || !barangay.geometry.coordinates) return;
     
     const coords = barangay.geometry.coordinates;
     map.flyTo([coords[1], coords[0]], 16, { animate: true, duration: 1.5 });
@@ -130,6 +158,40 @@ const FloodMap = () => {
     });
     
     setSelectedBarangay(null);
+  };
+
+  // Feature importance display
+  const renderFeatureImportances = () => {
+    if (!modelInfo || !modelInfo.featureImportances) return null;
+    
+    const featureNames = modelInfo.featureNames || [
+      'Elevation', 'Drainage', 'Proximity', 'Urbanization', 
+      'Flood History', 'Water Level', 'Stagnation'
+    ];
+    
+    return (
+      <div className="model-info">
+        <h4>Model Performance</h4>
+        <p><strong>Accuracy:</strong> {modelInfo.accuracy}%</p>
+        <p><strong>Samples Trained:</strong> {modelInfo.sampleCount}</p>
+        <div className="feature-importance">
+          <h5>Feature Importance:</h5>
+          {modelInfo.featureImportances.map((importance, index) => (
+            <div key={index} className="feature-bar">
+              <span>{featureNames[index] || `Feature ${index}`}</span>
+              <div className="bar-container">
+                <div 
+                  className="bar" 
+                  style={{ width: `${importance * 100}%` }}
+                >
+                  {Math.round(importance * 100)}%
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -167,25 +229,54 @@ const FloodMap = () => {
                     {selectedBarangay.risk}
                   </span>
                 </p>
+                {selectedBarangay.predicted !== undefined && (
+                  <>
+                    <p><strong>Predicted: </strong>
+                      {selectedBarangay.predicted ? "Yes" : "No"}
+                    </p>
+                    <p><strong>Confidence: </strong>
+                      {selectedBarangay.confidence || "N/A"}
+                    </p>
+                    {selectedBarangay.calculated_risk && (
+                      <p><strong>Survey Risk: </strong>
+                        {selectedBarangay.calculated_risk}
+                      </p>
+                    )}
+                    {selectedBarangay.survey_entries > 0 && (
+                      <p><strong>Survey Entries: </strong>
+                        {selectedBarangay.survey_entries}
+                      </p>
+                    )}
+                  </>
+                )}
               </>
             ) : (
               <p className="placeholder-text">Click a barangay to view details</p>
             )}
           </div>
 
+          {modelInfo && renderFeatureImportances()}
+
           <div className="barangay-list">
-            {filteredBarangays.map((f, index) => (
-              <div
-                key={index}
-                className={`barangay-card ${hovered === f.properties.barangay ? "hovered" : ""}`}
-                onMouseEnter={() => setHovered(f.properties.barangay)}
-                onMouseLeave={() => setHovered(null)}
-                onClick={() => flyToBarangay(f)}
-              >
-                <strong>{f.properties.barangay}</strong>
-                <span style={{ color: getRiskColor(f.properties.risk) }}>{f.properties.risk}</span>
-              </div>
-            ))}
+            {filteredBarangays.length === 0 ? (
+              <p className="no-results">No barangays found</p>
+            ) : (
+              filteredBarangays.map((f, index) => (
+                <div
+                  key={index}
+                  className={`barangay-card ${hovered === f.properties.barangay ? "hovered" : ""}`}
+                  onMouseEnter={() => setHovered(f.properties.barangay)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={() => flyToBarangay(f)}
+                >
+                  <strong>{f.properties.barangay}</strong>
+                  <span style={{ color: getRiskColor(f.properties.risk) }}>
+                    {f.properties.risk}
+                    {f.properties.predicted && " ✓"}
+                  </span>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </aside>
@@ -199,55 +290,52 @@ const FloodMap = () => {
             </button>
           )}
 
-          <MapContainer
-            center={INITIAL_CENTER}
-            zoom={INITIAL_ZOOM}
-            minZoom={10} 
-            maxZoom={18}
-            maxBounds={CDO_BOUNDS}          
-            maxBoundsViscosity={1.0}        
-            scrollWheelZoom={true}
-            className="leaflet-map"
-            ref={setMapInstance} 
-            
-            // 1. DISABLE DEFAULT ZOOM CONTROLS
-            zoomControl={false} 
-          >
-            <TileLayer 
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; OpenStreetMap contributors'
-            />
-            
-            {/* 2. RENDER ZOOM CONTROLS ONLY WHEN MAP IS ACTIVE */}
-            {appState === 'map' && (
-               <ZoomControl position="topleft" />
-            )}
-
-            {filteredBarangays.map((f, index) => {
-              const isSelected = selectedBarangay && selectedBarangay.barangay === f.properties.barangay;
+          {appState === 'map' && (
+            <MapContainer
+              center={INITIAL_CENTER}
+              zoom={INITIAL_ZOOM}
+              minZoom={10} 
+              maxZoom={18}
+              maxBounds={CDO_BOUNDS}          
+              maxBoundsViscosity={1.0}        
+              scrollWheelZoom={true}
+              className="leaflet-map"
+              ref={setMapInstance} 
+              zoomControl={false} 
+            >
+              <TileLayer 
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; OpenStreetMap contributors'
+              />
               
-              return (
-                <Marker
-                  key={index}
-                  position={[f.geometry.coordinates[1], f.geometry.coordinates[0]]}
-                  icon={getDynamicIcon(f.properties.risk, isSelected)}
-                  zIndexOffset={isSelected ? 1000 : 0} 
-                  eventHandlers={{ click: () => flyToBarangay(f) }}
-                >
-                  <Tooltip 
-                    key={isSelected ? "selected" : "hover"} 
-                    direction={isSelected ? "bottom" : "top"} 
-                    offset={isSelected ? [0, 5] : [0, -28]} 
-                    opacity={1} 
-                    permanent={isSelected} 
-                    className={isSelected ? "barangay-tooltip-selected" : ""}
+              <ZoomControl position="topleft" />
+
+              {filteredBarangays.map((f, index) => {
+                const isSelected = selectedBarangay && selectedBarangay.barangay === f.properties.barangay;
+                
+                return (
+                  <Marker
+                    key={index}
+                    position={[f.geometry.coordinates[1], f.geometry.coordinates[0]]}
+                    icon={getDynamicIcon(f.properties.risk, isSelected)}
+                    zIndexOffset={isSelected ? 1000 : 0} 
+                    eventHandlers={{ click: () => flyToBarangay(f) }}
                   >
-                    {f.properties.barangay}
-                  </Tooltip>
-                </Marker>
-              );
-            })}
-          </MapContainer>
+                    <Tooltip 
+                      key={isSelected ? "selected" : "hover"} 
+                      direction={isSelected ? "bottom" : "top"} 
+                      offset={isSelected ? [0, 5] : [0, -28]} 
+                      opacity={1} 
+                      permanent={isSelected} 
+                      className={isSelected ? "barangay-tooltip-selected" : ""}
+                    >
+                      {f.properties.barangay}
+                    </Tooltip>
+                  </Marker>
+                );
+              })}
+            </MapContainer>
+          )}
         </div>
       </main>
 
@@ -257,6 +345,10 @@ const FloodMap = () => {
           <div className="upload-box">
             <h2>Initialize Flood Model</h2>
             <p>Upload your CSV dataset to train the Random Forest model.</p>
+            <p className="format-note">
+              <strong>CSV Format:</strong> Barangay, Years Lived, Elevation, Drainage, 
+              Proximity to Water, Area Type, Flood History, Max Water Level, Stagnation Time
+            </p>
             
             <div className="upload-input-wrapper">
               <input 
@@ -285,7 +377,8 @@ const FloodMap = () => {
           <div className="loading-box">
             <div className="spinner"></div>
             <h3>Training AI Model...</h3>
-            <p>Analyzing parameters and predicting risks.</p>
+            <p>Analyzing survey data and predicting flood risks.</p>
+            <p className="loading-detail">This may take a few moments...</p>
           </div>
         </div>
       )}
