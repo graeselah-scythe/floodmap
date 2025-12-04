@@ -33,6 +33,7 @@ const INITIAL_ZOOM = 11.7;
 
 const FloodMap = () => {
   const mapRef = useRef(null);
+  const barangayListRef = useRef(null);
 
   // --- STATES ---
   const [appState, setAppState] = useState("upload"); 
@@ -52,19 +53,16 @@ const FloodMap = () => {
   // Auto-hide model panel after 10 seconds
   useEffect(() => {
     if (modelInfo && showModelPanel) {
-      // Clear existing timeout
       if (modelPanelTimeout) {
         clearTimeout(modelPanelTimeout);
       }
       
-      // Set new timeout to hide panel after 10 seconds
       const timeout = setTimeout(() => {
         setShowModelPanel(false);
       }, 10000);
       
       setModelPanelTimeout(timeout);
       
-      // Cleanup
       return () => clearTimeout(timeout);
     }
   }, [modelInfo, showModelPanel]);
@@ -88,7 +86,7 @@ const FloodMap = () => {
           sampleCount: result.sampleCount,
           confusionMatrix: result.confusionMatrix
         });
-        setShowModelPanel(true); // Show panel when training completes
+        setShowModelPanel(true);
         setAppState("map");
       } else {
         throw new Error("Invalid training result");
@@ -138,7 +136,7 @@ const FloodMap = () => {
       case "High": return "#FB8C00";
       case "Medium": return "#FDD835";
       case "Low": return "#43A047";
-      case "No Data": return "#757575"; // Grey for no data
+      case "No Data": return "#757575";
       default: return "#757575";
     }
   };
@@ -149,7 +147,7 @@ const FloodMap = () => {
       case "High": return "orange";
       case "Medium": return "yellow";
       case "Low": return "green";
-      case "No Data": return "grey"; // Grey for no data
+      case "No Data": return "grey";
       default: return "grey";
     }
   };
@@ -173,7 +171,6 @@ const FloodMap = () => {
       }
       return f.properties.risk === riskFilter;
     }).filter(f => {
-      // Filter by search
       if (!search.trim()) return true;
       return f.properties.barangay && 
              f.properties.barangay.toLowerCase().includes(search.toLowerCase());
@@ -274,90 +271,96 @@ const FloodMap = () => {
       
       <aside className="floodmap-sidebar">
         <div className="sidebar-content">
-          <h2>Barangay List</h2>
-          <input
-            type="text"
-            placeholder="Search barangay..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="search-input"
-          />
+          {/* Upper Section: Barangay List */}
+          <div className="upper-section">
+            <h2>Barangay List</h2>
+            <input
+              type="text"
+              placeholder="Search barangay..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="search-input"
+            />
 
-          <div className="risk-filter-buttons">
-            {["All", "No Data", "Low", "Medium", "High", "Very High"].map((risk) => (
-              <button
-                key={risk}
-                onClick={() => setRiskFilter(risk)}
-                className={`risk-btn ${riskFilter === risk ? "active" : ""}`}
-                style={{ 
-                  backgroundColor: risk === "No Data" ? "#757575" : 
-                    risk === "Low" ? "#43A047" :
-                    risk === "Medium" ? "#FDD835" :
-                    risk === "High" ? "#FB8C00" :
-                    risk === "Very High" ? "#E53935" : "#f0f0f0",
-                  color: risk === "Medium" ? "#333" : "white"
-                }}
-              >
-                {risk}
-              </button>
-            ))}
-          </div>
-
-          <div className="info-panel">
-            {selectedBarangay ? (
-              <>
-                <h3>{selectedBarangay.barangay}</h3>
-                <p><strong>Flood Risk: </strong>
-                  <span style={{ color: getRiskColor(selectedBarangay.risk) }}>
-                    {selectedBarangay.risk || "No Data"}
-                  </span>
-                </p>
-                {selectedBarangay.predicted !== undefined && (
-                  <>
-                    <p><strong>Predicted: </strong>
-                      {selectedBarangay.predicted ? "Yes" : "No"}
-                    </p>
-                    <p><strong>Confidence: </strong>
-                      {selectedBarangay.confidence || "N/A"}
-                    </p>
-                    {selectedBarangay.calculated_risk && (
-                      <p><strong>Survey Risk: </strong>
-                        {selectedBarangay.calculated_risk}
-                      </p>
-                    )}
-                    {selectedBarangay.survey_entries > 0 && (
-                      <p><strong>Survey Entries: </strong>
-                        {selectedBarangay.survey_entries}
-                      </p>
-                    )}
-                  </>
-                )}
-              </>
-            ) : (
-              <p className="placeholder-text">Click a barangay to view details</p>
-            )}
-          </div>
-
-          <div className="barangay-list">
-            {filteredBarangays.length === 0 ? (
-              <p className="no-results">No barangays found</p>
-            ) : (
-              filteredBarangays.map((f, index) => (
-                <div
-                  key={index}
-                  className={`barangay-card ${hovered === f.properties.barangay ? "hovered" : ""}`}
-                  onMouseEnter={() => setHovered(f.properties.barangay)}
-                  onMouseLeave={() => setHovered(null)}
-                  onClick={() => flyToBarangay(f)}
+            <div className="risk-filter-buttons">
+              {["All", "No Data", "Low", "Medium", "High", "Very High"].map((risk) => (
+                <button
+                  key={risk}
+                  onClick={() => setRiskFilter(risk)}
+                  className={`risk-btn ${riskFilter === risk ? "active" : ""}`}
+                  style={{ 
+                    backgroundColor: risk === "No Data" ? "#757575" : 
+                      risk === "Low" ? "#43A047" :
+                      risk === "Medium" ? "#FDD835" :
+                      risk === "High" ? "#FB8C00" :
+                      risk === "Very High" ? "#E53935" : "#f0f0f0",
+                    color: risk === "Medium" ? "#333" : "white"
+                  }}
                 >
-                  <strong>{f.properties.barangay}</strong>
-                  <span style={{ color: getRiskColor(f.properties.risk) }}>
-                    {f.properties.risk || "No Data"}
-                    {f.properties.predicted && " ✓"}
-                  </span>
-                </div>
-              ))
-            )}
+                  {risk}
+                </button>
+              ))}
+            </div>
+
+            <div className="barangay-list" ref={barangayListRef}>
+              {filteredBarangays.length === 0 ? (
+                <p className="no-results">No barangays found</p>
+              ) : (
+                filteredBarangays.map((f, index) => (
+                  <div
+                    key={index}
+                    className={`barangay-card ${hovered === f.properties.barangay ? "hovered" : ""}`}
+                    onMouseEnter={() => setHovered(f.properties.barangay)}
+                    onMouseLeave={() => setHovered(null)}
+                    onClick={() => flyToBarangay(f)}
+                  >
+                    <strong>{f.properties.barangay}</strong>
+                    <span style={{ color: getRiskColor(f.properties.risk) }}>
+                      {f.properties.risk || "No Data"}
+                      {f.properties.predicted && " ✓"}
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Lower Section: Selected Barangay Details */}
+          <div className="lower-section">
+            <div className="info-panel">
+              {selectedBarangay ? (
+                <>
+                  <h3>{selectedBarangay.barangay}</h3>
+                  <p><strong>Flood Risk: </strong>
+                    <span style={{ color: getRiskColor(selectedBarangay.risk) }}>
+                      {selectedBarangay.risk || "No Data"}
+                    </span>
+                  </p>
+                  {selectedBarangay.predicted !== undefined && (
+                    <>
+                      <p><strong>Predicted: </strong>
+                        {selectedBarangay.predicted ? "Yes" : "No"}
+                      </p>
+                      <p><strong>Confidence: </strong>
+                        {selectedBarangay.confidence || "N/A"}
+                      </p>
+                      {selectedBarangay.calculated_risk && (
+                        <p><strong>Survey Risk: </strong>
+                          {selectedBarangay.calculated_risk}
+                        </p>
+                      )}
+                      {selectedBarangay.survey_entries > 0 && (
+                        <p><strong>Survey Entries: </strong>
+                          {selectedBarangay.survey_entries}
+                        </p>
+                      )}
+                    </>
+                  )}
+                </>
+              ) : (
+                <p className="placeholder-text">Click a barangay to view details</p>
+              )}
+            </div>
           </div>
         </div>
       </aside>
@@ -403,16 +406,28 @@ const FloodMap = () => {
                     zIndexOffset={isSelected ? 1000 : 0} 
                     eventHandlers={{ click: () => flyToBarangay(f) }}
                   >
+                    {/* Hover Tooltip */}
                     <Tooltip 
-                      key={isSelected ? "selected" : "hover"} 
-                      direction={isSelected ? "bottom" : "top"} 
-                      offset={isSelected ? [0, 5] : [0, -28]} 
-                      opacity={1} 
-                      permanent={isSelected} 
-                      className={isSelected ? "barangay-tooltip-selected" : ""}
+                      direction="top" 
+                      offset={[0, -28]} 
+                      opacity={0.9}
+                      className="hover-tooltip"
                     >
                       {f.properties.barangay}: {risk}
                     </Tooltip>
+                    
+                    {/* Selected Tooltip (permanent) */}
+                    {isSelected && (
+                      <Tooltip 
+                        direction="bottom" 
+                        offset={[0, 10]} 
+                        opacity={1}
+                        permanent={true}
+                        className="selected-tooltip"
+                      >
+                        {f.properties.barangay}: {risk}
+                      </Tooltip>
+                    )}
                   </Marker>
                 );
               })}

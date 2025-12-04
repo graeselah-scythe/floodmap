@@ -226,6 +226,116 @@
   color: #2c3e50;
 }
 
+/* Split sidebar into two sections */
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 !important; /* Remove padding from main content */
+}
+
+.upper-section {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  min-height: 0;
+  border-bottom: 2px solid #F3D79C;
+}
+
+.lower-section {
+  flex-shrink: 0;
+  height: 40%;
+  max-height: 35vh;
+  padding: 20px;
+  background: #FFF7E5;
+  border-top: 2px solid #F3D79C;
+}
+
+/* Make sidebar wider */
+.floodmap-grid-container {
+  grid-template-columns: 380px 1fr; /* Increased from 320px */
+}
+
+/* Adjust barangay list to fill upper section */
+.barangay-list {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  padding-right: 5px;
+  margin-top: 15px;
+}
+
+/* Ensure lower section doesn't scroll with upper section */
+.lower-section .info-panel {
+  height: auto;
+  overflow-y: auto;
+}
+
+/* Remove margin from upper section h2 to save space */
+.upper-section h2 {
+  margin-top: 0;
+}
+
+/* Scrollbar styling for upper section */
+.upper-section::-webkit-scrollbar {
+  width: 6px;
+}
+
+.upper-section::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.upper-section::-webkit-scrollbar-thumb {
+  background: #F3D79C;
+  border-radius: 10px;
+}
+
+/* Make lower section info panel scrollable if content overflows */
+.lower-section .info-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lower-section .info-panel::-webkit-scrollbar-track {
+  background: #f9f9f9;
+  border-radius: 10px;
+}
+
+.lower-section .info-panel::-webkit-scrollbar-thumb {
+  background: #E9D398;
+  border-radius: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .floodmap-grid-container { 
+    grid-template-columns: 350px 1fr; 
+  }
+}
+
+@media (max-width: 768px) {
+  .floodmap-grid-container {
+    grid-template-areas: "navbar" "main" "sidebar";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr 300px;
+  }
+  
+  .floodmap-sidebar { 
+    border-right: none; 
+    border-top: 2px solid #F3D79C; 
+  }
+  
+  .upper-section, .lower-section {
+    height: auto;
+    max-height: none;
+  }
+  
+  .lower-section {
+    height: 250px;
+  }
+}
+
 .search-input {
   width: 100%;
   padding: 10px;
@@ -267,7 +377,7 @@
   border: 1px solid #F3D79C;
   border-radius: 10px;
   padding: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   flex-shrink: 0;
 }
@@ -681,4 +791,104 @@
 
 .risk-btn[style*="background-color: #FDD835"] {
   color: #333 !important;
+}
+
+/* Add these styles for the tooltips */
+
+/* Hover tooltip */
+.hover-tooltip {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: normal;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+
+.hover-tooltip:before {
+  border-top-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Selected tooltip (permanent) */
+.selected-tooltip {
+  background-color: #333;
+  color: white;
+  border: 2px solid #fff;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  opacity: 1;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.selected-tooltip:before {
+  border-top-color: #333;
+}
+
+/* Make sure selected tooltip is on top */
+.leaflet-tooltip.selected-tooltip {
+  z-index: 1000 !important;
+}
+
+/* Adjust tooltip arrow colors */
+.leaflet-tooltip-top:before {
+  border-top-color: #333;
+}
+
+.leaflet-tooltip-bottom:before {
+  border-bottom-color: #333;
+}
+
+/* Tooltip positioning fix */
+.leaflet-tooltip {
+  pointer-events: none;
+}
+
+/* Selected marker highlight effect */
+.marker-selected {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    filter: drop-shadow(0 0 2px rgba(0, 123, 255, 0.7));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(0, 123, 255, 0.9));
+  }
+  100% {
+    filter: drop-shadow(0 0 2px rgba(0, 123, 255, 0.7));
+  }
+}
+
+/* Different colored tooltips based on risk */
+.selected-tooltip[class*="red"] {
+  background-color: #E53935;
+  border-color: #ffcdd2;
+}
+
+.selected-tooltip[class*="orange"] {
+  background-color: #FB8C00;
+  border-color: #ffe0b2;
+}
+
+.selected-tooltip[class*="yellow"] {
+  background-color: #FDD835;
+  border-color: #fff9c4;
+  color: #333;
+}
+
+.selected-tooltip[class*="green"] {
+  background-color: #43A047;
+  border-color: #c8e6c9;
+}
+
+.selected-tooltip[class*="grey"] {
+  background-color: #757575;
+  border-color: #e0e0e0;
 }
