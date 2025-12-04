@@ -6,7 +6,7 @@ import "leaflet/dist/leaflet.css";
 
 // Import Data & Logic
 import { cdo_geojson } from "../../data/cdo_geojson";
-import { trainAndPredict } from "../training/floodRiskModel"; 
+import { trainAndPredict, visualizeTraining } from "../training/floodRiskModel"; // Add visualizeTraining
 
 // --- ICON GENERATOR ---
 const createIcon = (color, size) => {
@@ -49,6 +49,10 @@ const FloodMap = () => {
   const [showModelPanel, setShowModelPanel] = useState(false);
   const [modelPanelTimeout, setModelPanelTimeout] = useState(null);
 
+  // State for visualization
+  const [showVisualizeButton, setShowVisualizeButton] = useState(true);
+  const [visualizationWindow, setVisualizationWindow] = useState(null);
+
   // --- EFFECTS ---
   // Auto-hide model panel after 10 seconds
   useEffect(() => {
@@ -67,6 +71,15 @@ const FloodMap = () => {
     }
   }, [modelInfo, showModelPanel]);
 
+  // Clean up visualization window on unmount
+  useEffect(() => {
+    return () => {
+      if (visualizationWindow && !visualizationWindow.closed) {
+        visualizationWindow.close();
+      }
+    };
+  }, []);
+
   // --- HANDLERS ---
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
@@ -77,32 +90,80 @@ const FloodMap = () => {
     try {
       const result = await trainAndPredict(file, cdo_geojson);
       
-      if (result && result.geojson) {
+      console.log("Training result:", result);
+      
+      if (result && result.geojson && result.success) {
         setMapData(result.geojson);
+        
         setModelInfo({
-          accuracy: result.accuracy,
-          featureImportances: result.featureImportances,
-          featureNames: result.featureNames,
-          sampleCount: result.sampleCount,
-          confusionMatrix: result.confusionMatrix
+          accuracy: result.modelInfo?.accuracy || "0",
+          featureImportances: result.modelInfo?.featureImportances || [],
+          featureNames: result.modelInfo?.featureNames || [
+            'Residence Duration', 'Terrain Type', 'Infrastructure Quality', 
+            'Proximity to Water', 'Area Type', 'Flood Frequency', 
+            'Flood Depth', 'Flood Duration'
+          ],
+          sampleCount: result.modelInfo?.sampleCount || 0,
+          barangayCount: result.modelInfo?.barangayCount || 0,
+          distribution: result.modelInfo?.distribution || {},
+          oobScore: result.modelInfo?.oobScore || "N/A"
         });
+        
         setShowModelPanel(true);
         setAppState("map");
+        
+        // If visualization window is open, send the training results
+        if (visualizationWindow && !visualizationWindow.closed) {
+          visualizationWindow.postMessage({
+            type: 'TRAINING_COMPLETE',
+            data: {
+              modelInfo: result.modelInfo,
+              predictions: result.geojson.features.map(f => ({
+                barangay: f.properties.barangay,
+                risk: f.properties.risk_level,
+                confidence: f.properties.confidence
+              }))
+            }
+          }, '*');
+        }
       } else {
-        throw new Error("Invalid training result");
+        throw new Error(result?.error || "Invalid training result");
       }
     } catch (error) {
       console.error("Training Error:", error);
-      alert("Error processing CSV. Please check the format and try again.");
+      alert(`Error: ${error.message}`);
       setAppState("upload");
       setMapData(cdo_geojson);
+      setModelInfo(null);
     }
   };
 
-  const handleBypass = () => {
-    setMapData(cdo_geojson);
-    setModelInfo(null);
-    setAppState("map");
+  const handleVisualizeTraining = () => {
+    // Open a new window/tab for visualization
+    const width = 1200;
+    const height = 800;
+    const left = (window.screen.width - width) / 2;
+    const top = (window.screen.height - height) / 2;
+    
+    const win = window.open(
+      '/visualize-training',
+      'TrainingVisualizer',
+      `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+    );
+    
+    if (win) {
+      setVisualizationWindow(win);
+      setShowVisualizeButton(false);
+      
+      // Listen for window close
+      const checkClose = setInterval(() => {
+        if (win.closed) {
+          clearInterval(checkClose);
+          setVisualizationWindow(null);
+          setShowVisualizeButton(true);
+        }
+      }, 500);
+    }
   };
 
   // Model panel handlers
@@ -132,22 +193,22 @@ const FloodMap = () => {
   // --- HELPERS ---
   const getRiskColor = (risk) => {
     switch (risk) {
-      case "Very High": return "#E53935";
+      case "Critical": return "#E53935";
       case "High": return "#FB8C00";
-      case "Medium": return "#FDD835";
+      case "Moderate": return "#FDD835";
       case "Low": return "#43A047";
-      case "No Data": return "#757575";
+      case "Unknown": return "#757575";
       default: return "#757575";
     }
   };
 
   const getRiskColorName = (risk) => {
     switch (risk) {
-      case "Very High": return "red";
+      case "Critical": return "red";
       case "High": return "orange";
-      case "Medium": return "yellow";
+      case "Moderate": return "yellow";
       case "Low": return "green";
-      case "No Data": return "grey";
+      case "Unknown": return "grey";
       default: return "grey";
     }
   };
@@ -166,10 +227,9 @@ const FloodMap = () => {
       
       if (riskFilter === "All") return true;
       if (riskFilter === "No Data") {
-        return f.properties.risk === "No Data" || 
-               (f.properties.predicted === false && !f.properties.risk);
+        return !f.properties.risk_level || f.properties.risk_level === "Unknown";
       }
-      return f.properties.risk === riskFilter;
+      return f.properties.risk_level === riskFilter;
     }).filter(f => {
       if (!search.trim()) return true;
       return f.properties.barangay && 
@@ -213,14 +273,18 @@ const FloodMap = () => {
     setSelectedBarangay(null);
   };
 
-  // Model panel content
+  // Model panel content - FIXED VERSION
   const renderModelPanelContent = () => {
     if (!modelInfo) return null;
     
+    const featureImportances = modelInfo.featureImportances || [];
     const featureNames = modelInfo.featureNames || [
-      'Elevation', 'Drainage', 'Proximity', 'Urbanization', 
-      'Flood History', 'Water Level', 'Stagnation'
+      'Residence Duration', 'Terrain Type', 'Infrastructure Quality', 
+      'Proximity to Water', 'Area Type', 'Flood Frequency', 
+      'Flood Depth', 'Flood Duration'
     ];
+    
+    const distribution = modelInfo.distribution || {};
     
     return (
       <div className="model-panel-content">
@@ -238,29 +302,64 @@ const FloodMap = () => {
         <div className="model-stats">
           <div className="stat-item">
             <span className="stat-label">Accuracy:</span>
-            <span className="stat-value">{modelInfo.accuracy}%</span>
+            <span className="stat-value">{modelInfo.accuracy || '0'}%</span>
           </div>
           <div className="stat-item">
             <span className="stat-label">Samples:</span>
-            <span className="stat-value">{modelInfo.sampleCount}</span>
+            <span className="stat-value">{modelInfo.sampleCount || 0}</span>
           </div>
+          {modelInfo.barangayCount > 0 && (
+            <div className="stat-item">
+              <span className="stat-label">Barangays:</span>
+              <span className="stat-value">{modelInfo.barangayCount}</span>
+            </div>
+          )}
         </div>
+        
+        {Object.keys(distribution).length > 0 && (
+          <div className="risk-distribution">
+            <h5>Risk Distribution</h5>
+            <div className="distribution-bars">
+              {Object.entries(distribution).map(([risk, count]) => (
+                <div key={risk} className="distribution-item">
+                  <span className="distribution-label" style={{ color: getRiskColor(risk) }}>
+                    {risk}
+                  </span>
+                  <span className="distribution-count">{count}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         
         <div className="feature-importance">
           <h5>Feature Importance</h5>
-          {modelInfo.featureImportances.map((importance, index) => (
-            <div key={index} className="feature-bar">
-              <span className="feature-name">{featureNames[index] || `Feature ${index}`}</span>
-              <div className="bar-container">
-                <div 
-                  className="bar" 
-                  style={{ width: `${importance * 100}%` }}
-                >
-                  <span className="bar-percentage">{Math.round(importance * 100)}%</span>
+          {featureImportances.length > 0 ? (
+            featureImportances.map((item, index) => {
+              const importance = typeof item === 'object' ? (item.importance || 0) : (item || 0);
+              const featureName = typeof item === 'object' 
+                ? (item.feature || featureNames[index] || `Feature ${index}`)
+                : (featureNames[index] || `Feature ${index}`);
+              
+              return (
+                <div key={index} className="feature-bar">
+                  <span className="feature-name">{featureName}</span>
+                  <div className="bar-container">
+                    <div 
+                      className="bar" 
+                      style={{ width: `${Math.min(importance * 100, 100)}%` }}
+                    >
+                      <span className="bar-percentage">
+                        {Math.round(importance * 100)}%
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              );
+            })
+          ) : (
+            <p className="no-features">No feature importance data available</p>
+          )}
         </div>
       </div>
     );
@@ -271,7 +370,6 @@ const FloodMap = () => {
       
       <aside className="floodmap-sidebar">
         <div className="sidebar-content">
-          {/* Upper Section: Barangay List */}
           <div className="upper-section">
             <h2>Barangay List</h2>
             <input
@@ -283,7 +381,7 @@ const FloodMap = () => {
             />
 
             <div className="risk-filter-buttons">
-              {["All", "No Data", "Low", "Medium", "High", "Very High"].map((risk) => (
+              {["All", "No Data", "Low", "Moderate", "High", "Critical"].map((risk) => (
                 <button
                   key={risk}
                   onClick={() => setRiskFilter(risk)}
@@ -291,10 +389,10 @@ const FloodMap = () => {
                   style={{ 
                     backgroundColor: risk === "No Data" ? "#757575" : 
                       risk === "Low" ? "#43A047" :
-                      risk === "Medium" ? "#FDD835" :
+                      risk === "Moderate" ? "#FDD835" :
                       risk === "High" ? "#FB8C00" :
-                      risk === "Very High" ? "#E53935" : "#f0f0f0",
-                    color: risk === "Medium" ? "#333" : "white"
+                      risk === "Critical" ? "#E53935" : "#f0f0f0",
+                    color: risk === "Moderate" ? "#333" : "white"
                   }}
                 >
                   {risk}
@@ -306,52 +404,58 @@ const FloodMap = () => {
               {filteredBarangays.length === 0 ? (
                 <p className="no-results">No barangays found</p>
               ) : (
-                filteredBarangays.map((f, index) => (
-                  <div
-                    key={index}
-                    className={`barangay-card ${hovered === f.properties.barangay ? "hovered" : ""}`}
-                    onMouseEnter={() => setHovered(f.properties.barangay)}
-                    onMouseLeave={() => setHovered(null)}
-                    onClick={() => flyToBarangay(f)}
-                  >
-                    <strong>{f.properties.barangay}</strong>
-                    <span style={{ color: getRiskColor(f.properties.risk) }}>
-                      {f.properties.risk || "No Data"}
-                      {f.properties.predicted && " ✓"}
-                    </span>
-                  </div>
-                ))
+                filteredBarangays.map((f, index) => {
+                  const risk = f.properties.risk_level || "Unknown";
+                  return (
+                    <div
+                      key={index}
+                      className={`barangay-card ${hovered === f.properties.barangay ? "hovered" : ""}`}
+                      onMouseEnter={() => setHovered(f.properties.barangay)}
+                      onMouseLeave={() => setHovered(null)}
+                      onClick={() => flyToBarangay(f)}
+                    >
+                      <strong>{f.properties.barangay}</strong>
+                      <span style={{ color: getRiskColor(risk) }}>
+                        {risk}
+                        {f.properties.predicted && " ✓"}
+                      </span>
+                    </div>
+                  );
+                })
               )}
             </div>
           </div>
 
-          {/* Lower Section: Selected Barangay Details */}
           <div className="lower-section">
             <div className="info-panel">
               {selectedBarangay ? (
                 <>
                   <h3>{selectedBarangay.barangay}</h3>
                   <p><strong>Flood Risk: </strong>
-                    <span style={{ color: getRiskColor(selectedBarangay.risk) }}>
-                      {selectedBarangay.risk || "No Data"}
+                    <span style={{ color: getRiskColor(selectedBarangay.risk_level) }}>
+                      {selectedBarangay.risk_level || "No Data"}
                     </span>
                   </p>
                   {selectedBarangay.predicted !== undefined && (
                     <>
-                      <p><strong>Predicted: </strong>
+                      <p><strong>Model Prediction: </strong>
                         {selectedBarangay.predicted ? "Yes" : "No"}
                       </p>
                       <p><strong>Confidence: </strong>
                         {selectedBarangay.confidence || "N/A"}
                       </p>
-                      {selectedBarangay.calculated_risk && (
-                        <p><strong>Survey Risk: </strong>
-                          {selectedBarangay.calculated_risk}
+                      {selectedBarangay.survey_samples > 0 && (
+                        <p><strong>Survey Samples: </strong>
+                          {selectedBarangay.survey_samples}
                         </p>
                       )}
-                      {selectedBarangay.survey_entries > 0 && (
-                        <p><strong>Survey Entries: </strong>
-                          {selectedBarangay.survey_entries}
+                      {selectedBarangay.calculated_risks && (
+                        <p><strong>Survey Results: </strong>
+                          {Object.entries(selectedBarangay.calculated_risks || {}).map(([risk, count]) => (
+                            <span key={risk} style={{ marginRight: '10px' }}>
+                              {risk}: {count}
+                            </span>
+                          ))}
                         </p>
                       )}
                     </>
@@ -396,7 +500,7 @@ const FloodMap = () => {
 
               {filteredBarangays.map((f, index) => {
                 const isSelected = selectedBarangay && selectedBarangay.barangay === f.properties.barangay;
-                const risk = f.properties.risk || "No Data";
+                const risk = f.properties.risk_level || "Unknown";
                 
                 return (
                   <Marker
@@ -406,7 +510,6 @@ const FloodMap = () => {
                     zIndexOffset={isSelected ? 1000 : 0} 
                     eventHandlers={{ click: () => flyToBarangay(f) }}
                   >
-                    {/* Hover Tooltip */}
                     <Tooltip 
                       direction="top" 
                       offset={[0, -28]} 
@@ -416,7 +519,6 @@ const FloodMap = () => {
                       {f.properties.barangay}: {risk}
                     </Tooltip>
                     
-                    {/* Selected Tooltip (permanent) */}
                     {isSelected && (
                       <Tooltip 
                         direction="bottom" 
@@ -436,7 +538,6 @@ const FloodMap = () => {
         </div>
       </main>
 
-      {/* Model Performance Panel */}
       {modelInfo && (
         <div 
           className={`model-panel ${showModelPanel ? 'expanded' : 'collapsed'}`}
@@ -464,9 +565,26 @@ const FloodMap = () => {
             <h2>Initialize Flood Model</h2>
             <p>Upload your CSV dataset to train the Random Forest model.</p>
             <p className="format-note">
-              <strong>CSV Format:</strong> Barangay, Years Lived, Elevation, Drainage, 
-              Proximity to Water, Area Type, Flood History, Max Water Level, Stagnation Time
+              <strong>CSV Format (9 columns):</strong><br />
+              Barangay, Residence Duration, Terrain Type, Infrastructure Quality,<br />
+              Proximity to Water, Area Type, Flood Frequency, Flood Depth, Flood Duration
             </p>
+            
+            {/* VISUALIZE BUTTON - ADD THIS */}
+            {showVisualizeButton && (
+              <div className="visualize-section">
+                <button 
+                  onClick={handleVisualizeTraining}
+                  className="visualize-btn"
+                  title="Open training visualization in new window"
+                >
+                  🎬 Visualize Training Process
+                </button>
+                <p className="visualize-note">
+                  See how the machine learning model works step-by-step
+                </p>
+              </div>
+            )}
             
             <div className="upload-input-wrapper">
               <input 
@@ -479,12 +597,6 @@ const FloodMap = () => {
               <label htmlFor="csvInput" className="upload-btn">
                 Select CSV File
               </label>
-
-              <div className="divider-text">or</div>
-
-              <button onClick={handleBypass} className="bypass-btn">
-                Skip Training & View Map
-              </button>
             </div>
           </div>
         </div>
@@ -496,7 +608,9 @@ const FloodMap = () => {
             <div className="spinner"></div>
             <h3>Training AI Model...</h3>
             <p>Analyzing survey data and predicting flood risks.</p>
-            <p className="loading-detail">This may take a few moments...</p>
+            <p className="loading-detail">
+              Watch the visualization window for real-time training progress!
+            </p>
           </div>
         </div>
       )}

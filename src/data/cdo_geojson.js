@@ -971,7 +971,7 @@ export const cdo_geojson = {
     {
       "type": "Feature",
       "properties": {
-        "barangay": "F. S. Catanico",
+        "barangay": "F.S. Catanico",
         "risk": "No Data",
         "predicted": false,
         "confidence": "N/A",
