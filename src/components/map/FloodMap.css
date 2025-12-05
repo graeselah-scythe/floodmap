@@ -1102,37 +1102,3 @@
 }
 
 /* Add to FloodMap.css */
-
-.visualize-section {
-  margin: 1.5rem 0;
-  padding: 1rem;
-  background: rgba(102, 126, 234, 0.1);
-  border-radius: 8px;
-  text-align: center;
-}
-
-.visualize-btn {
-  background: linear-gradient(135deg, #9C27B0 0%, #673AB7 100%);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.visualize-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(156, 39, 176, 0.4);
-}
-
-.visualize-note {
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-  color: #666;
-}

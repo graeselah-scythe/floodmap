@@ -570,21 +570,6 @@ const FloodMap = () => {
               Proximity to Water, Area Type, Flood Frequency, Flood Depth, Flood Duration
             </p>
             
-            {/* VISUALIZE BUTTON - ADD THIS */}
-            {showVisualizeButton && (
-              <div className="visualize-section">
-                <button 
-                  onClick={handleVisualizeTraining}
-                  className="visualize-btn"
-                  title="Open training visualization in new window"
-                >
-                  🎬 Visualize Training Process
-                </button>
-                <p className="visualize-note">
-                  See how the machine learning model works step-by-step
-                </p>
-              </div>
-            )}
             
             <div className="upload-input-wrapper">
               <input 
