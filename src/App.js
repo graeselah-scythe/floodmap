@@ -3,7 +3,6 @@ import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import FloodMapPage from "./pages/FloodMapPage";
 import Preparedness from "./pages/Preparedness";
-import TrainingVisualizer from './components/training/TrainingVisualizer';
 
 function App() {
   return (
@@ -13,7 +12,6 @@ function App() {
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="/home" element={<Home />} />
           <Route path="/map" element={<FloodMapPage />} />
-          <Route path="/visualize-training" element={<TrainingVisualizer />} />
           <Route path="/preparedness" element={<Preparedness />} />
         </Route>
       </Routes>
